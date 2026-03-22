@@ -1,4 +1,3 @@
-import GreetingBar from "@/components/greeting-bar";
 import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -10,7 +9,6 @@ export default function Index() {
       }}
     >
       <Text>Sari Sari Store Inventory - Dap & Niko</Text>
-      <GreetingBar />
     </SafeAreaView>
   );
 }
