@@ -1,4 +1,4 @@
-import GreetingBar from "@/components/greeting-bar";
+import GreetingBar from "@/src/components/greeting-bar";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 

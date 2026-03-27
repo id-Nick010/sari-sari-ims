@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import VarTypo from "../theme/typography";
 
 export default function GreetingBar() {
   return (
@@ -24,13 +25,8 @@ const styles = StyleSheet.create({
     paddingInline: 20,
     paddingBlock: 10,
   },
-  h1: {
-    fontSize: 22,
-    fontWeight: "bold",
-  },
-  p: {
-    fontSize: 14,
-  },
+  h1: { ...VarTypo.head.h7 },
+  p: { ...VarTypo.body.b3 },
   notifBtn: {
     justifyContent: "center",
     alignItems: "center",
