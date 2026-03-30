@@ -1,4 +1,5 @@
-// CSS Style Variables for Colors
+// CSS Style Variables
+// for colors
 
 const VarColors = {
   // Primary

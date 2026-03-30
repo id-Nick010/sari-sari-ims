@@ -1,4 +1,6 @@
-// typography.ts
+// CSS Style Variables
+// for texts
+
 import { TextStyle } from "react-native";
 
 type Typography = {
