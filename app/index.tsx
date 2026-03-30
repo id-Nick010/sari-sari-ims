@@ -6,8 +6,6 @@ export default function Index() {
     <SafeAreaView
       style={{
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
       }}
     >
       <Text>Sari Sari Store Inventory - Dap & Niko</Text>
