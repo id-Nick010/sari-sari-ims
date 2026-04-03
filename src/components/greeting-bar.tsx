@@ -50,7 +50,6 @@ const styles = StyleSheet.create({
     paddingInline: 20,
     paddingBlock: 10,
     gap: contStyle.spacing.s4,
-    backgroundColor: colorStyle.yellow.c10,
   },
   h1: { ...typeStyle.head.h7, color: colorStyle.primary.c300 },
   p: { ...typeStyle.body.b3, color: colorStyle.secondary.c300 },
