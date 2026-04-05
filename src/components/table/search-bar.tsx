@@ -21,10 +21,8 @@ export default function SearchBar() {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    justifyContent: "flex-start",
     alignItems: "center",
     paddingInline: contStyle.spacing.s2,
-    margin: 10,
     borderWidth: contStyle.stroke.s0,
     borderRadius: contStyle.radius.s7,
     borderColor: colorStyle.neutral.c300,
@@ -35,5 +33,6 @@ const styles = StyleSheet.create({
   searchBar: {
     ...typoStyle.body.b3,
     color: colorStyle.neutral.c600,
+    height: "100%",
   },
 });

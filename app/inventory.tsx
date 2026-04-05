@@ -1,6 +1,7 @@
 import GreetingBar from "@/src/components/greeting-bar";
 import StatCards from "@/src/components/stat-cards";
 import SearchBar from "@/src/components/table/search-bar";
+import ViewToggle from "@/src/components/table/view-toggle";
 import VarColors from "@/src/theme/colors";
 import VarContainers from "@/src/theme/containers";
 import { StyleSheet, View } from "react-native";
@@ -20,15 +21,26 @@ export default function InventoryScreen() {
       </View>
       <View style={styles.tableSection}>
         {/* inventorytable  */}
-        <View style={{ flex: 1 }}>
-          {/* search table */}
-          <SearchBar />
-          {/* tbl view */}
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            margin: 10,
+            gap: 10,
+          }}
+        >
+          <View style={{ flex: 8, justifyContent: "center" }}>
+            <SearchBar />
+          </View>
+          <View style={{ flex: 2, justifyContent: "center" }}>
+            <ViewToggle labelA="Table" labelB="Cards" />
+          </View>
           {/* tbl action btns */}
         </View>
-        <View>{/* tbl category filter btns */}</View>
+        <View style={{ flex: 1 }}>{/* tbl category filter btns */}</View>
         {/* tbl item cnt */}
-        <View>{/* table item tab view btn */}</View>
+        <View style={{ flex: 8 }}>{/* table item tab view btn */}</View>
       </View>
     </SafeAreaView>
   );
