@@ -10,44 +10,40 @@ const colorStyle = VarColors;
 
 export default function GreetingBar() {
   return (
-    <>
-      <View style={styles.container}>
-        <View style={{ flex: 2 }}>
-          <Text style={styles.h1}>
-            AGAO Sari-Sari Store{" "}
-            <Text style={{ color: colorStyle.secondary.c500 }}>Inventory</Text>
-          </Text>
-          <Text style={styles.p}>Wednesday, March 4, 2026</Text>
-        </View>
-        <TouchableOpacity style={styles.langBtn}>
-          <Ionicons
-            name="language-outline"
-            size={25}
-            style={{ color: colorStyle.neutral.c700 }}
-          />
-          <Text
-            style={{ ...typeStyle.body.b3, color: colorStyle.neutral.c700 }}
-          >
-            Eng
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.notifBtn}>
-          <Ionicons
-            name="notifications-outline"
-            size={25}
-            style={{ color: colorStyle.neutral.c700 }}
-          />
-        </TouchableOpacity>
+    <View style={styles.container}>
+      <View style={{ flex: 2 }}>
+        <Text style={styles.h1}>
+          AGAO Sari-Sari Store{" "}
+          <Text style={{ color: colorStyle.secondary.c500 }}>Inventory</Text>
+        </Text>
+        <Text style={styles.p}>Wednesday, March 4, 2026</Text>
       </View>
-    </>
+      <TouchableOpacity style={styles.langBtn}>
+        <Ionicons
+          name="language-outline"
+          size={25}
+          style={{ color: colorStyle.neutral.c700 }}
+        />
+        <Text style={{ ...typeStyle.body.b3, color: colorStyle.neutral.c700 }}>
+          Eng
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.notifBtn}>
+        <Ionicons
+          name="notifications-outline"
+          size={25}
+          style={{ color: colorStyle.neutral.c700 }}
+        />
+      </TouchableOpacity>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    width: "100%",
     flexDirection: "row",
-    maxHeight: 100,
-    paddingInline: 20,
     paddingBlock: 10,
     gap: contStyle.spacing.s4,
   },

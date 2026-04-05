@@ -81,15 +81,14 @@ export default function StatCards() {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     flexDirection: "row",
-    justifyContent: "space-between",
     width: "100%",
-    paddingInline: 20,
-    paddingBlock: 10,
-    gap: contStyle.spacing.s6,
+    justifyContent: "space-between",
+    marginBottom: 22,
   },
   card: {
-    flex: 1,
+    width: "24%",
     paddingVertical: contStyle.spacing.s6,
     paddingHorizontal: contStyle.spacing.s6,
     borderRadius: contStyle.radius.s7,
