@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     justifyContent: "space-between",
-    marginBottom: 22,
+    marginBottom: contStyle.spacing.s5,
   },
   card: {
     width: "24%",

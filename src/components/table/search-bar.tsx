@@ -20,6 +20,7 @@ export default function SearchBar() {
 
 const styles = StyleSheet.create({
   container: {
+    height: "100%",
     flexDirection: "row",
     alignItems: "center",
     paddingInline: contStyle.spacing.s2,
