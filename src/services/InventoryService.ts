@@ -11,7 +11,6 @@ export const InventoryService = {
     sellingPrice: number,
     quantity: number,
     lowStockThreshold: number,
-    status: string,
   ) {
     if (quantity < 0) throw new Error("Quantity cannot be negative");
     if (costPrice < 0) throw new Error("Cost Price cannot be negative");
@@ -19,6 +18,7 @@ export const InventoryService = {
 
     const createdAt = new Date();
     const updatedAt = new Date();
+    console.log("Is this a date: " + createdAt);
 
     await ProductRepository.insert(
       category,
@@ -29,7 +29,6 @@ export const InventoryService = {
       sellingPrice,
       quantity,
       lowStockThreshold,
-      status,
       createdAt,
       updatedAt,
     );

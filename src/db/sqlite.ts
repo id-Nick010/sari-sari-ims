@@ -18,7 +18,7 @@ export const initDB = async () => {
         PRAGMA journal_mode = WAL;
         
         CREATE TABLE IF NOT EXISTS products (
-            id INTEGER PRIMARY KEY DEFAULT gen_random_uuid(),
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             category VARCHAR(50) NOT NULL,
             name VARCHAR(150) NOT NULL,
             barcode VARCHAR(50) UNIQUE,
@@ -28,13 +28,14 @@ export const initDB = async () => {
             quantity INTEGER NOT NULL DEFAULT 0 CHECK (quantity >=0),
             low_stock_threshold INTEGER NOT NULL DEFAULT 10,
             status VARCHAR(20) GENERATED ALWAYS AS (
-             CASE
+            CASE
                 WHEN quantity = 0 THEN 'Out of stock'
                 WHEN quantity <= low_stock_threshold THEN 'Low stock'
-                ELSE 'in_stock
+                ELSE 'in_stock'
+            END
             ) STORED,
-            created_at TIMESTAMPZ NOTE NULL DEFAULT now(),
-            updated_at TIMESTAMPZ NOTE NULL DEFAULT now(),
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP 
         );
         `);
 };

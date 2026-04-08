@@ -16,7 +16,6 @@ export const ProductRepository = {
     sellingPrice: number,
     quantity: number,
     lowStockThreshold: number,
-    status: string,
     createdAt: Date,
     updatedAt: Date,
   ): Promise<void> {
@@ -25,7 +24,7 @@ export const ProductRepository = {
     const updatedAtString = updatedAt.toISOString();
 
     await db.runAsync(
-      "INSERT INTO products (category, name, barcode, image_url, cost_price, selling_price, quantity, low_stock_threshold, status, created_at, updated_at) (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO products (category, name, barcode, image_url, cost_price, selling_price, quantity, low_stock_threshold, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
         category,
         name,
@@ -35,7 +34,6 @@ export const ProductRepository = {
         sellingPrice,
         quantity,
         lowStockThreshold,
-        status,
         createdAtString,
         updatedAtString,
       ],

@@ -2,10 +2,13 @@ import GreetingBar from "@/src/components/greeting-bar";
 import StatCards from "@/src/components/stat-cards";
 import SearchBar from "@/src/components/table/search-bar";
 import ViewToggle from "@/src/components/table/view-toggle";
+import { InventoryController } from "@/src/controllers/InventoryController";
+import { Product } from "@/src/models/Product";
 import VarColors from "@/src/theme/colors";
 import VarContainers from "@/src/theme/containers";
 import VarTypo from "@/src/theme/typography";
 import { Ionicons } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -13,7 +16,39 @@ const colorStyle = VarColors;
 const contStyle = VarContainers;
 const typoStyle = VarTypo;
 
+async function addTempoInvDate() {
+  await InventoryController.createItem(
+    "Electronics",
+    "Wireless Bluetooth Headphones",
+    "8934720193845",
+    "https://example.com/images/headphones.png",
+    1199.5,
+    1898.99,
+    44,
+    9,
+  );
+}
+
 export default function InventoryScreen() {
+  // add tempo product data
+
+  // load products for the inventory table
+  const [products, setProducts] = useState<Product[]>([]);
+
+  const loadProductData = async () => {
+    const data = await InventoryController.loadProducts();
+    setProducts(data);
+  };
+
+  useEffect(() => {
+    // addTempoInvDate();
+    loadProductData();
+  }, []);
+
+  console.log(
+    "Product data in Inventory: \n" + products.map((p) => p.barcode + " .. "),
+  );
+
   return (
     <SafeAreaView style={styles.screen}>
       <View style={{ flex: 1, marginInline: contStyle.spacing.s7 }}>
@@ -95,6 +130,14 @@ export default function InventoryScreen() {
           </View>
         </View>
         <View style={{ flex: 1 }}>{/* tbl category filter btns */}</View>
+        {/* main inventory tbl */}
+        <View>
+          {products.map((p) => (
+            <Text key={p.id}>
+              {p.barcode} - {p.name}
+            </Text>
+          ))}
+        </View>
         {/* tbl item cnt */}
         <View style={{ flex: 8 }}>{/* table item tab view btn */}</View>
       </View>
