@@ -1,3 +1,4 @@
+import { initDB } from "@/src/db/sqlite";
 import {
   Inter_400Regular,
   Inter_500Medium,
@@ -8,10 +9,15 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import { Drawer } from "expo-router/drawer";
+import { useEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function RootLayout() {
+  useEffect(() => {
+    initDB();
+  }, []);
+
   const [fontsLoaded] = useFonts({
     Inter_400Regular,
     Inter_500Medium,
