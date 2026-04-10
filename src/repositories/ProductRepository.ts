@@ -39,4 +39,9 @@ export const ProductRepository = {
       ],
     );
   },
+
+  async resetData(): Promise<void> {
+    const db = await openDB();
+    await db.runAsync("DELETE FROM products");
+  },
 };

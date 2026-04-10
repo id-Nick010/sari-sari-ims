@@ -15,7 +15,6 @@ export const InventoryController = {
     sellingPrice: number,
     quantity: number,
     lowStockThreshold: number,
-    status: string,
   ) {
     await InventoryService.addProduct(
       category,
@@ -26,7 +25,10 @@ export const InventoryController = {
       sellingPrice,
       quantity,
       lowStockThreshold,
-      status,
     );
+  },
+
+  async resetData() {
+    InventoryService.resetData();
   },
 };

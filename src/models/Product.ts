@@ -3,12 +3,12 @@ export interface Product {
   category: string;
   name: string;
   barcode: string;
-  imageUrl: string;
-  costPrice: number;
-  sellingPrice: number;
+  image_url: string;
+  cost_price: number;
+  selling_price: number;
   quantity: number;
-  lowStockThreshold: number;
+  low_stock_Threshold: number;
   status: string;
-  createdAt: Date;
-  updatedAt: Date;
+  created_at: Date;
+  updated_at: Date;
 }

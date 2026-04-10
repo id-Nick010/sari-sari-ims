@@ -14,14 +14,17 @@ export const openDB = async () => {
 export const initDB = async () => {
   const db = await openDB();
 
+  // await db.execAsync(`DROP TABLE products;`);
+
   await db.execAsync(`
         PRAGMA journal_mode = WAL;
+
         
         CREATE TABLE IF NOT EXISTS products (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             category VARCHAR(50) NOT NULL,
             name VARCHAR(150) NOT NULL,
-            barcode VARCHAR(50) UNIQUE,
+            barcode VARCHAR(50) ,
             image_url TEXT,
             cost_price NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK (cost_price >=0),
             selling_price NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK (selling_price >=0),

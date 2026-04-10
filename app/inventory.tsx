@@ -1,5 +1,6 @@
 import GreetingBar from "@/src/components/greeting-bar";
 import StatCards from "@/src/components/stat-cards";
+import InvTable from "@/src/components/table/inv-table";
 import SearchBar from "@/src/components/table/search-bar";
 import ViewToggle from "@/src/components/table/view-toggle";
 import { InventoryController } from "@/src/controllers/InventoryController";
@@ -46,7 +47,7 @@ export default function InventoryScreen() {
   }, []);
 
   console.log(
-    "Product data in Inventory: \n" + products.map((p) => p.barcode + " .. "),
+    "Product data in Inventory: \n" + JSON.stringify(products, null, 2),
   );
 
   return (
@@ -94,6 +95,10 @@ export default function InventoryScreen() {
             }}
           >
             <Pressable
+              onPress={async () => {
+                await addTempoInvDate();
+                await loadProductData();
+              }}
               style={({ pressed }) => [
                 styles.addItemBtn,
                 {
@@ -111,6 +116,10 @@ export default function InventoryScreen() {
               <Text style={styles.addItemBtnText}>Add Item</Text>
             </Pressable>
             <Pressable
+              onPress={async () => {
+                await InventoryController.resetData();
+                loadProductData();
+              }}
               style={({ pressed }) => [
                 styles.delItemBtn,
                 {
@@ -129,17 +138,13 @@ export default function InventoryScreen() {
             </Pressable>
           </View>
         </View>
-        <View style={{ flex: 1 }}>{/* tbl category filter btns */}</View>
+        {/* <View style={{ flex: 1 }}></View> */}
         {/* main inventory tbl */}
-        <View>
-          {products.map((p) => (
-            <Text key={p.id}>
-              {p.barcode} - {p.name}
-            </Text>
-          ))}
+        <View style={styles.mainTable}>
+          <InvTable data={products} />
         </View>
         {/* tbl item cnt */}
-        <View style={{ flex: 8 }}>{/* table item tab view btn */}</View>
+        <View style={{}}>{/* table item tab view btn */}</View>
       </View>
     </SafeAreaView>
   );
@@ -197,5 +202,8 @@ const styles = StyleSheet.create({
   },
   delItemBtnIcon: {
     color: colorStyle.red.c200,
+  },
+  mainTable: {
+    flex: 7,
   },
 });

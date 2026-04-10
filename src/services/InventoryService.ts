@@ -18,7 +18,6 @@ export const InventoryService = {
 
     const createdAt = new Date();
     const updatedAt = new Date();
-    console.log("Is this a date: " + createdAt);
 
     await ProductRepository.insert(
       category,
@@ -36,5 +35,10 @@ export const InventoryService = {
 
   async listProduct(): Promise<Product[]> {
     return await ProductRepository.getAll();
+  },
+
+  async resetData(): Promise<void> {
+    await ProductRepository.resetData();
+    console.log("Data Deleted!");
   },
 };
