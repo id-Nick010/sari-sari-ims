@@ -11,6 +11,7 @@ import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import { Drawer } from "expo-router/drawer";
 import { useEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { PaperProvider } from "react-native-paper";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function RootLayout() {
@@ -28,24 +29,26 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
-      <Drawer
-        drawerContent={(props) => <CustomSideber {...props} />}
-        screenOptions={{
-          drawerType: "permanent",
-          headerShown: false,
-          drawerStyle: {
-            width: 80,
-            backgroundColor: "#666666",
-          },
-        }}
-      >
-        {/* Don't Use this */}
-        <Drawer.Screen name="index" options={{ drawerLabel: "Home" }} />
-        <Drawer.Screen
-          name="inventory"
-          options={{ drawerLabel: "Inventory" }}
-        />
-      </Drawer>
+      <PaperProvider>
+        <Drawer
+          drawerContent={(props) => <CustomSideber {...props} />}
+          screenOptions={{
+            drawerType: "permanent",
+            headerShown: false,
+            drawerStyle: {
+              width: 80,
+              backgroundColor: "#666666",
+            },
+          }}
+        >
+          {/* Don't Use this */}
+          <Drawer.Screen name="index" options={{ drawerLabel: "Home" }} />
+          <Drawer.Screen
+            name="inventory"
+            options={{ drawerLabel: "Inventory" }}
+          />
+        </Drawer>
+      </PaperProvider>
     </SafeAreaProvider>
   );
 }

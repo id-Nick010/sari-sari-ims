@@ -10,7 +10,7 @@ import VarContainers from "@/src/theme/containers";
 import VarTypo from "@/src/theme/typography";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const colorStyle = VarColors;
@@ -42,7 +42,6 @@ export default function InventoryScreen() {
   };
 
   useEffect(() => {
-    // addTempoInvDate();
     loadProductData();
   }, []);
 
@@ -52,100 +51,102 @@ export default function InventoryScreen() {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <View style={{ flex: 1, marginInline: contStyle.spacing.s7 }}>
-        <GreetingBar />
-      </View>
-      <View style={{ flex: 2, marginInline: contStyle.spacing.s7 }}>
-        <StatCards />
-      </View>
-      <View style={styles.tableSection}>
-        {/* inventorytable  */}
-        <View
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            margin: contStyle.spacing.s4,
-            gap: 10,
-          }}
-        >
-          {/* Search & View Toggle */}
+      <ScrollView>
+        <View style={{ flex: 1, marginInline: contStyle.spacing.s7 }}>
+          <GreetingBar />
+        </View>
+        <View style={{ flex: 2, marginInline: contStyle.spacing.s7 }}>
+          <StatCards />
+        </View>
+        <View style={styles.tableSection}>
+          {/* inventorytable  */}
           <View
             style={{
-              flex: 6,
+              flex: 1,
               flexDirection: "row",
+              justifyContent: "space-between",
+              margin: contStyle.spacing.s4,
               gap: 10,
             }}
           >
-            <View style={{ flex: 7, justifyContent: "center" }}>
-              <SearchBar />
+            {/* Search & View Toggle */}
+            <View
+              style={{
+                flex: 6,
+                flexDirection: "row",
+                gap: 10,
+              }}
+            >
+              <View style={{ flex: 7, justifyContent: "center" }}>
+                <SearchBar />
+              </View>
+              <View style={{ flex: 3, justifyContent: "center" }}>
+                <ViewToggle labelA="Table" labelB="Cards" />
+              </View>
             </View>
-            <View style={{ flex: 3, justifyContent: "center" }}>
-              <ViewToggle labelA="Table" labelB="Cards" />
+            {/* Table Action Buttons */}
+            <View
+              style={{
+                flex: 4,
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                gap: 10,
+              }}
+            >
+              <Pressable
+                onPress={async () => {
+                  await addTempoInvDate();
+                  await loadProductData();
+                }}
+                style={({ pressed }) => [
+                  styles.addItemBtn,
+                  {
+                    backgroundColor: pressed
+                      ? "lightgrey"
+                      : colorStyle.primary.c300,
+                  },
+                ]}
+              >
+                <Ionicons
+                  style={styles.addItemBtnIcon}
+                  name="add-outline"
+                  size={20}
+                />
+                <Text style={styles.addItemBtnText}>Add Item</Text>
+              </Pressable>
+              <Pressable
+                onPress={async () => {
+                  await InventoryController.resetData();
+                  loadProductData();
+                }}
+                style={({ pressed }) => [
+                  styles.delItemBtn,
+                  {
+                    backgroundColor: pressed
+                      ? "lightgrey"
+                      : colorStyle.neutral.c100,
+                  },
+                ]}
+              >
+                <Ionicons
+                  style={styles.delItemBtnIcon}
+                  name="trash-outline"
+                  size={20}
+                />
+                <Text style={styles.delItemBtnText}>Delete</Text>
+              </Pressable>
             </View>
           </View>
-          {/* Table Action Buttons */}
-          <View
-            style={{
-              flex: 4,
-              flexDirection: "row",
-              justifyContent: "flex-end",
-              alignItems: "center",
-              gap: 10,
-            }}
-          >
-            <Pressable
-              onPress={async () => {
-                await addTempoInvDate();
-                await loadProductData();
-              }}
-              style={({ pressed }) => [
-                styles.addItemBtn,
-                {
-                  backgroundColor: pressed
-                    ? "lightgrey"
-                    : colorStyle.primary.c300,
-                },
-              ]}
-            >
-              <Ionicons
-                style={styles.addItemBtnIcon}
-                name="add-outline"
-                size={20}
-              />
-              <Text style={styles.addItemBtnText}>Add Item</Text>
-            </Pressable>
-            <Pressable
-              onPress={async () => {
-                await InventoryController.resetData();
-                loadProductData();
-              }}
-              style={({ pressed }) => [
-                styles.delItemBtn,
-                {
-                  backgroundColor: pressed
-                    ? "lightgrey"
-                    : colorStyle.neutral.c100,
-                },
-              ]}
-            >
-              <Ionicons
-                style={styles.delItemBtnIcon}
-                name="trash-outline"
-                size={20}
-              />
-              <Text style={styles.delItemBtnText}>Delete</Text>
-            </Pressable>
+          {/* <View style={{ flex: 1 }}></View> */}
+          {/* main inventory tbl */}
+          <View style={styles.mainTable}>
+            <InvTable data={products} />
           </View>
+          {/* tbl item cnt */}
+          <View style={{}}>{/* table item tab view btn */}</View>
         </View>
-        {/* <View style={{ flex: 1 }}></View> */}
-        {/* main inventory tbl */}
-        <View style={styles.mainTable}>
-          <InvTable data={products} />
-        </View>
-        {/* tbl item cnt */}
-        <View style={{}}>{/* table item tab view btn */}</View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -205,5 +206,6 @@ const styles = StyleSheet.create({
   },
   mainTable: {
     flex: 7,
+    paddingInline: contStyle.spacing.s4,
   },
 });
