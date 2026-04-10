@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: "24%",
-    paddingVertical: contStyle.spacing.s6,
+    paddingVertical: contStyle.spacing.s4,
     paddingHorizontal: contStyle.spacing.s6,
     borderRadius: contStyle.radius.s7,
     backgroundColor: colorStyle.neutral.c100,

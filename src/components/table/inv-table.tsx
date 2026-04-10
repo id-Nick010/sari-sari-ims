@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   cell: {
     flex: 2,
     textAlign: "center",
-    paddingBlock: 20,
+    paddingBlock: 10,
   },
   cellText: {
     ...VarTypo.body.b3,
