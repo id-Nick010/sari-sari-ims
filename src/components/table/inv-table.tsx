@@ -1,14 +1,28 @@
 import { Product } from "@/src/models/Product";
 import VarColors from "@/src/theme/colors";
 import VarTypo from "@/src/theme/typography";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { DataTable } from "react-native-paper";
 interface InvTableProps {
   data: Product[];
 }
 
+const numberOfItemsPerPageList = [3, 5, 10, 15];
+
 export default function InvTable({ data }: InvTableProps) {
-  const renderProduct = data.map((p) => (
+  const [page, setPage] = useState(0);
+  const [numberOfItemsPerPage, onItemsPerPageChange] = useState(
+    numberOfItemsPerPageList[0],
+  );
+  const from = page * numberOfItemsPerPage;
+  const to = Math.min((page + 1) * numberOfItemsPerPage, data.length);
+
+  useEffect(() => {
+    setPage(0);
+  }, [numberOfItemsPerPage]);
+
+  const renderRows = data.slice(from, to).map((p) => (
     <DataTable.Row style={styles.row} key={p.id}>
       <DataTable.Cell style={{ flex: 1 }}>
         <Text style={styles.cellText}>__</Text>
@@ -88,7 +102,17 @@ export default function InvTable({ data }: InvTableProps) {
             <Text style={styles.cellText}>Actions</Text>
           </DataTable.Title>
         </DataTable.Header>
-        {renderProduct}
+        <ScrollView>{renderRows}</ScrollView>
+        <DataTable.Pagination
+          page={page}
+          numberOfPages={Math.ceil(data.length / numberOfItemsPerPage)}
+          onPageChange={(page) => setPage(page)}
+          label={`${from + 1}-${to} of ${data.length}`}
+          numberOfItemsPerPageList={numberOfItemsPerPageList}
+          numberOfItemsPerPage={numberOfItemsPerPage}
+          onItemsPerPageChange={onItemsPerPageChange}
+          selectPageDropdownLabel={"Rows/page:"}
+        />
       </DataTable>
     </View>
   );

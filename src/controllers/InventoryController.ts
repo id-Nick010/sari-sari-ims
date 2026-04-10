@@ -26,6 +26,7 @@ export const InventoryController = {
       quantity,
       lowStockThreshold,
     );
+    return true;
   },
 
   async resetData() {
