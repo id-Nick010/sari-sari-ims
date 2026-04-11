@@ -48,7 +48,8 @@
             "./node_modules/@expo-google-fonts/inter/400Regular/Inter_700Bold.ttf"
           ]
         }
-      ]
+      ],
+      "expo-sqlite"
     ],
     "experiments": {
       "typedRoutes": true,
