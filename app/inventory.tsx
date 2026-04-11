@@ -45,9 +45,9 @@ export default function InventoryScreen() {
     loadProductData();
   }, []);
 
-  console.log(
-    "Product data in Inventory: \n" + JSON.stringify(products, null, 2),
-  );
+  // console.log(
+  //   "Product data in Inventory: \n" + JSON.stringify(products, null, 2),
+  // );
 
   return (
     <SafeAreaView style={styles.screen}>

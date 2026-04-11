@@ -4,6 +4,7 @@ import VarTypo from "@/src/theme/typography";
 import { useEffect, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { DataTable } from "react-native-paper";
+import CheckBox from "../check-box";
 interface InvTableProps {
   data: Product[];
 }
@@ -18,6 +19,19 @@ export default function InvTable({ data }: InvTableProps) {
   const from = page * numberOfItemsPerPage;
   const to = Math.min((page + 1) * numberOfItemsPerPage, data.length);
 
+  //row checkbox rules
+  const [checkedIds, setCheckedIds] = useState<number[]>([]);
+
+  const toggleSelection = (id: number, newValue: boolean) => {
+    setCheckedIds((curr) => {
+      if (newValue) {
+        return curr.includes(id) ? curr : [...curr, id];
+      } else {
+        return curr.filter((x) => x !== id);
+      }
+    });
+  };
+
   useEffect(() => {
     setPage(0);
   }, [numberOfItemsPerPage]);
@@ -25,7 +39,10 @@ export default function InvTable({ data }: InvTableProps) {
   const renderRows = data.slice(from, to).map((p) => (
     <DataTable.Row style={styles.row} key={p.id}>
       <DataTable.Cell style={{ flex: 1 }}>
-        <Text style={styles.cellText}>__</Text>
+        <CheckBox
+          checked={checkedIds.includes(p.id)}
+          onChange={(newValue) => toggleSelection(p.id, newValue)}
+        />
       </DataTable.Cell>
       <DataTable.Cell style={[styles.cell, { flex: 5 }]}>
         <View style={{ flexDirection: "row" }}>
