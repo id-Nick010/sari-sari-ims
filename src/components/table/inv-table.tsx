@@ -8,7 +8,7 @@ interface InvTableProps {
   data: Product[];
 }
 
-const numberOfItemsPerPageList = [3, 5, 10, 15];
+const numberOfItemsPerPageList = [5, 10, 15];
 
 export default function InvTable({ data }: InvTableProps) {
   const [page, setPage] = useState(0);

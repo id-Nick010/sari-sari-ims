@@ -8,7 +8,9 @@
 import * as SQLite from "expo-sqlite";
 
 export const openDB = async () => {
-  return await SQLite.openDatabaseAsync("localSSINVStorage");
+  return await SQLite.openDatabaseAsync("localSSINVStorage", {
+    useNewConnection: true,
+  });
 };
 
 export const initDB = async () => {
