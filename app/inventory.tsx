@@ -108,7 +108,7 @@ export default function InventoryScreen() {
                 <Text style={styles.addItemBtnText}>Add Item</Text>
               </Pressable>
               <Pressable
-                onPress={async () => {
+                onPress={() => {
                   resetData();
                 }}
                 style={({ pressed }) => [

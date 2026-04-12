@@ -38,7 +38,7 @@ export const useInventoryController = () => {
   };
 
   const resetData = async () => {
-    InventoryService.resetData();
+    await InventoryService.resetData();
     await loadAllProductData();
   };
   return {
