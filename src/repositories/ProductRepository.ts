@@ -7,7 +7,7 @@ export const ProductRepository = {
     return await db.getAllAsync<Product>("SELECT * FROM products");
   },
 
-  async getDataById(id: number): Promise<Product | null> {
+  async getDataById(id: number): Promise<Product> {
     const db = await openDB();
     return await db.getFirstAsync<Product>(
       "SELECT * FROM products WHERE id = ?",

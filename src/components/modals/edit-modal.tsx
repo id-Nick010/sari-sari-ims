@@ -1,5 +1,8 @@
+import { useInventoryController } from "@/src/controllers/InventoryController";
+import { Product } from "@/src/models/Product";
 import VarColors from "@/src/theme/colors";
 import VarContainers from "@/src/theme/containers";
+import { useEffect, useState } from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 
 interface EditModalProps {
@@ -13,6 +16,17 @@ export default function EditModal({
   onClose,
   dataId,
 }: EditModalProps) {
+  const { getProductById } = useInventoryController();
+
+  const [product, setProduct] = useState<Product | null>();
+
+  useEffect(() => {
+    (async () => {
+      const newProd = await getProductById(dataId);
+      setProduct(newProd);
+    })();
+  }, [dataId, getProductById]);
+
   return (
     <Modal
       visible={visible}
@@ -24,7 +38,9 @@ export default function EditModal({
         <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
         <View style={styles.modalBox}>
           <Text style={styles.modalText}>This is your Id now: {dataId}</Text>
-
+          <Text>
+            Product: {product?.name}, {"\n"}Stock: {product?.status}
+          </Text>
           <Pressable style={styles.modalButton} onPress={onClose}>
             <Text style={styles.modalText}>Close</Text>
           </Pressable>

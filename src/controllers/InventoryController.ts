@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Product } from "../models/Product";
 import { InventoryService } from "../services/InventoryService";
 
@@ -12,6 +12,13 @@ export const useInventoryController = () => {
     setProducts(data);
     setLoading(false);
   };
+
+  const getProductById = useCallback(
+    async (id: number): Promise<Product | null> => {
+      return InventoryService.getProductById(id);
+    },
+    [],
+  );
 
   const createProduct = async (
     category: string,
@@ -45,6 +52,7 @@ export const useInventoryController = () => {
     products,
     loading,
     loadAllProductData,
+    getProductById,
     createProduct,
     resetData,
   };
