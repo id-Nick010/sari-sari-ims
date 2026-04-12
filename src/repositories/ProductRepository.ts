@@ -7,6 +7,14 @@ export const ProductRepository = {
     return await db.getAllAsync<Product>("SELECT * FROM products");
   },
 
+  async getDataById(id: number): Promise<Product | null> {
+    const db = await openDB();
+    return await db.getFirstAsync<Product>(
+      "SELECT * FROM products WHERE id = ?",
+      [id],
+    );
+  },
+
   async insert(
     category: string,
     name: string,

@@ -1,12 +1,19 @@
+import { useState } from "react";
 import { Product } from "../models/Product";
 import { InventoryService } from "../services/InventoryService";
 
-export const InventoryController = {
-  async loadProducts(): Promise<Product[]> {
-    return await InventoryService.listProduct();
-  },
+export const useInventoryController = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  async createItem(
+  const loadAllProductData = async () => {
+    setLoading(true);
+    const data = await InventoryService.listProduct();
+    setProducts(data);
+    setLoading(false);
+  };
+
+  const createProduct = async (
     category: string,
     name: string,
     barcode: string,
@@ -15,7 +22,7 @@ export const InventoryController = {
     sellingPrice: number,
     quantity: number,
     lowStockThreshold: number,
-  ) {
+  ) => {
     await InventoryService.addProduct(
       category,
       name,
@@ -26,10 +33,19 @@ export const InventoryController = {
       quantity,
       lowStockThreshold,
     );
+    await loadAllProductData();
     return true;
-  },
+  };
 
-  async resetData() {
+  const resetData = async () => {
     InventoryService.resetData();
-  },
+    await loadAllProductData();
+  };
+  return {
+    products,
+    loading,
+    loadAllProductData,
+    createProduct,
+    resetData,
+  };
 };

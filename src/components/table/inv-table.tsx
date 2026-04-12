@@ -1,10 +1,20 @@
 import { Product } from "@/src/models/Product";
 import VarColors from "@/src/theme/colors";
+import VarContainers from "@/src/theme/containers";
 import VarTypo from "@/src/theme/typography";
+import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { DataTable } from "react-native-paper";
 import CheckBox from "../check-box";
+import EditModal from "../modals/edit-modal";
 interface InvTableProps {
   data: Product[];
 }
@@ -21,6 +31,12 @@ export default function InvTable({ data }: InvTableProps) {
 
   //row checkbox rules
   const [checkedIds, setCheckedIds] = useState<number[]>([]);
+
+  //modal rules
+  const [editModalOpen, setEditModalOpen] = useState({
+    isVisible: false,
+    dataId: -1,
+  });
 
   const toggleSelection = (id: number, newValue: boolean) => {
     setCheckedIds((curr) => {
@@ -80,7 +96,15 @@ export default function InvTable({ data }: InvTableProps) {
         <Text style={styles.cellText}>{p.status}</Text>
       </DataTable.Cell>
       <DataTable.Cell style={styles.cell}>
-        <Text style={styles.cellText}>OO Edit</Text>
+        <Text style={styles.cellText}>
+          <Pressable
+            style={styles.editBtn}
+            onPress={() => setEditModalOpen({ isVisible: true, dataId: p.id })}
+          >
+            <Ionicons name="create-outline" size={15} />
+            <Text>Edit</Text>
+          </Pressable>
+        </Text>
       </DataTable.Cell>
     </DataTable.Row>
   ));
@@ -131,6 +155,13 @@ export default function InvTable({ data }: InvTableProps) {
           selectPageDropdownLabel={"Rows/page:"}
         />
       </DataTable>
+      <EditModal
+        visible={editModalOpen.isVisible}
+        onClose={() => {
+          setEditModalOpen((prev) => ({ isVisible: false, dataId: -1 }));
+        }}
+        dataId={editModalOpen.dataId}
+      />
     </View>
   );
 }
@@ -160,5 +191,15 @@ const styles = StyleSheet.create({
   rowImg: {
     width: "15%",
     aspectRatio: 1 / 1,
+  },
+  editBtn: {
+    gap: 5,
+    padding: "9%",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: VarContainers.radius.s2,
+    borderWidth: VarContainers.stroke.s1,
+    borderColor: VarColors.neutral.c200,
   },
 });

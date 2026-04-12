@@ -37,6 +37,10 @@ export const InventoryService = {
     return await ProductRepository.getAll();
   },
 
+  async getProductById(id: number): Promise<Product | null> {
+    return await ProductRepository.getDataById(id);
+  },
+
   async resetData(): Promise<void> {
     await ProductRepository.resetData();
     console.log("Data Deleted!");
