@@ -1,3 +1,5 @@
+import VarColors from "@/src/theme/colors";
+import VarContainers from "@/src/theme/containers";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 
@@ -22,18 +24,18 @@ export default function NumberField({ value, setValue }: Props) {
         keyboardType="numeric"
       />
 
-      <View>
+      <View style={styles.btnContainer}>
         <Pressable onPress={increase} style={styles.setterBtn}>
           <Ionicons
-            name="caret-up-outline"
-            size={5}
+            name="chevron-up-outline"
+            size={18}
             style={styles.setterIcon}
           />
         </Pressable>
         <Pressable onPress={decrease} style={styles.setterBtn}>
           <Ionicons
-            name="caret-down-outline"
-            size={5}
+            name="chevron-down-outline"
+            size={18}
             style={styles.setterIcon}
           />
         </Pressable>
@@ -43,8 +45,23 @@ export default function NumberField({ value, setValue }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {},
-  numField: {},
+  container: {
+    flexDirection: "row",
+    borderWidth: VarContainers.stroke.s0,
+    borderRadius: VarContainers.radius.s4,
+    borderColor: VarColors.neutral.c300,
+  },
+  numField: {
+    flex: 4,
+    color: VarColors.neutral.c600,
+    paddingHorizontal: 10,
+  },
+  btnContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
   setterBtn: {},
-  setterIcon: {},
+  setterIcon: {
+    color: VarColors.neutral.c700,
+  },
 });

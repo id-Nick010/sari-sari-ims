@@ -2,6 +2,7 @@ import { useInventoryController } from "@/src/controllers/InventoryController";
 import { Product } from "@/src/models/Product";
 import VarColors from "@/src/theme/colors";
 import VarContainers from "@/src/theme/containers";
+import VarTypo from "@/src/theme/typography";
 import { useEffect, useState } from "react";
 import {
   Modal,
@@ -35,15 +36,16 @@ export default function EditModal({
     })();
   }, [dataId, getProductById]);
 
+  if (!product) return null;
+
   //used generic for easy editing for each data in product
   const updateProductField = <K extends keyof Product>(
     key: K,
     value: Product[K],
   ) => {
     setProduct((prev) => (prev ? { ...prev, [key]: value } : prev));
+    console.log("Product: " + product.cost_price);
   };
-
-  if (!product) return null;
 
   return (
     <Modal
@@ -55,39 +57,106 @@ export default function EditModal({
       <View style={styles.overlay}>
         <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
         <View style={styles.modalBox}>
-          <Text style={styles.headerText}>Add New Item</Text>
+          <Text style={styles.headerText}>Edit Item</Text>
+          <View style={styles.dividerSpace} />
           <Text style={styles.fieldNameText}>Item Name</Text>
-          <TextInput style={styles.textField} value={product.name} />
-          <Text style={styles.fieldNameText}>Barcode</Text>
-          <TextInput style={styles.textField} value={product.barcode} />
-          <Text style={styles.fieldNameText}>Category</Text>
-          <TextInput style={styles.textField} value={product.category} />
-
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.fieldNameText}>Quantity</Text>
-            <NumberField
-              value={product.quantity}
-              setValue={(val) => updateProductField("quantity", val)}
-            />
-            <Text style={styles.fieldNameText}>Cost Price</Text>
-            <NumberField
-              value={product.cost_price}
-              setValue={(val) => updateProductField("cost_price", val)}
-            />
-            <Text style={styles.fieldNameText}>Selling Price</Text>
-            <NumberField
-              value={product.selling_price}
-              setValue={(val) => updateProductField("selling_price", val)}
+          <View style={styles.textFieldFrame}>
+            <TextInput
+              style={styles.textField}
+              value={product.name}
+              onChangeText={(val) => updateProductField("name", val)}
             />
           </View>
+
+          <Text style={styles.fieldNameText}>Barcode</Text>
+          <View style={styles.textFieldFrame}>
+            <TextInput
+              style={styles.textField}
+              value={product.barcode}
+              onChangeText={(val) => updateProductField("barcode", val)}
+            />
+          </View>
+          <Text style={styles.fieldNameText}>Category</Text>
+          <View style={styles.textFieldFrame}>
+            <TextInput
+              style={styles.textField}
+              value={product.category}
+              onChangeText={(val) => updateProductField("category", val)}
+            />
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              gap: "3%",
+            }}
+          >
+            <View style={styles.numberField}>
+              <Text style={styles.fieldNameText}>Quantity</Text>
+              <NumberField
+                value={product.quantity}
+                setValue={(val) => updateProductField("quantity", val)}
+              />
+            </View>
+
+            <View style={styles.numberField}>
+              <Text style={styles.fieldNameText}>Cost Price</Text>
+              <NumberField
+                value={product.cost_price}
+                setValue={(val) => updateProductField("cost_price", val)}
+              />
+            </View>
+            <View style={styles.numberField}>
+              <Text style={styles.fieldNameText}>Selling Price</Text>
+
+              <NumberField
+                value={product.selling_price}
+                setValue={(val) => updateProductField("selling_price", val)}
+              />
+            </View>
+          </View>
           <Text style={styles.fieldNameText}>Product Image</Text>
-          <TextInput style={styles.textField} value={product.image_url} />
-          <View style={{ flexDirection: "row" }}>
-            <Pressable style={styles.modalButton} onPress={onClose}>
-              <Text style={styles.modalText}>Cancel</Text>
+          <View style={styles.textFieldFrame}>
+            <TextInput
+              style={styles.textField}
+              value={product.image_url}
+              onChangeText={(val) => updateProductField("image_url", val)}
+            />
+          </View>
+          <Text style={styles.subText}>
+            Upload an image from your device (JPG, PNG, etc.)
+          </Text>
+          <View style={{ flexDirection: "row", marginTop: "3%", gap: "2%" }}>
+            <Pressable
+              style={[
+                styles.modalBtn,
+                {
+                  borderWidth: VarContainers.stroke.s0,
+                  borderColor: VarColors.neutral.c200,
+                },
+              ]}
+              onPress={onClose}
+            >
+              <Text
+                style={[
+                  styles.modalBtnText,
+                  { color: VarColors.secondary.c500 },
+                ]}
+              >
+                Cancel
+              </Text>
             </Pressable>
-            <Pressable style={styles.modalButton} onPress={onClose}>
-              <Text style={styles.modalText}>Add Item</Text>
+            <Pressable
+              style={[
+                styles.modalBtn,
+                { backgroundColor: VarColors.primary.c300 },
+              ]}
+              onPress={onClose}
+            >
+              <Text
+                style={[styles.modalBtnText, { color: VarColors.neutral.c100 }]}
+              >
+                Add Item
+              </Text>
             </Pressable>
           </View>
         </View>
@@ -98,28 +167,60 @@ export default function EditModal({
 
 const styles = StyleSheet.create({
   //modal styles
-  container: { flex: 1, justifyContent: "center", alignItems: "center" },
   overlay: {
     flex: 1,
-    backgroundColor: "#1d1e227e",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#1d1e227e",
+  },
+  dividerSpace: {
+    height: "4%",
   },
   modalBox: {
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
     padding: 20,
+    width: "35%",
+    borderRadius: 15,
     backgroundColor: "white",
-    borderRadius: 8,
+  },
+  modalBtn: {
+    flex: 2,
     alignItems: "center",
-  },
-  modalButton: {
     padding: 8,
-    borderRadius: 5,
-    borderWidth: VarContainers.stroke.s1,
-    marginTop: 10,
-    borderColor: VarColors.neutral.c200,
+    borderRadius: VarContainers.radius.s4,
   },
-  modalText: { color: VarColors.secondary.c500 },
-  headerText: {},
-  fieldNameText: {},
-  textField: {},
+  modalBtnText: {
+    ...VarTypo.body.b4_sb,
+  },
+  modalText: {
+    color: VarColors.secondary.c500,
+  },
+  headerText: {
+    ...VarTypo.head.h7,
+    color: VarColors.secondary.c500,
+  },
+  fieldNameText: {
+    ...VarTypo.body.b4_sb,
+    color: VarColors.secondary.c500,
+  },
+  subText: {
+    ...VarTypo.body.b4,
+    color: VarColors.neutral.c600,
+  },
+  textFieldFrame: {
+    width: "100%",
+    marginBottom: "2%",
+    borderWidth: VarContainers.stroke.s0,
+    borderColor: VarColors.neutral.c300,
+    borderRadius: VarContainers.radius.s4,
+  },
+  textField: {
+    paddingHorizontal: 10,
+    color: VarColors.neutral.c600,
+  },
+  numberField: {
+    flex: 1,
+    flexDirection: "column",
+  },
 });
