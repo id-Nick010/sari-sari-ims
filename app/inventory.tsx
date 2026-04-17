@@ -1,4 +1,5 @@
 import GreetingBar from "@/src/components/greeting-bar";
+import AddModal from "@/src/components/modals/add-modal";
 import StatCards from "@/src/components/stat-cards";
 import InvTable from "@/src/components/table/inv-table";
 import SearchBar from "@/src/components/table/search-bar";
@@ -8,7 +9,7 @@ import VarColors from "@/src/theme/colors";
 import VarContainers from "@/src/theme/containers";
 import VarTypo from "@/src/theme/typography";
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -25,18 +26,7 @@ export default function InventoryScreen() {
     loadAllProductData();
   }, [loadAllProductData]);
 
-  const addNewProduct = () => {
-    createProduct(
-      "Electronics",
-      "Wireless Bluetooth Headphones",
-      "8934720193845",
-      "https://example.com/images/headphones.png",
-      1199.5,
-      1898.99,
-      44,
-      9,
-    );
-  };
+  const [addModalOpen, setAddModalOpen] = useState(false);
 
   // console.log(
   //   "Product data in Inventory: \n" + JSON.stringify(products, null, 2),
@@ -88,9 +78,7 @@ export default function InventoryScreen() {
               }}
             >
               <Pressable
-                onPress={() => {
-                  addNewProduct();
-                }}
+                onPress={() => setAddModalOpen(true)}
                 style={({ pressed }) => [
                   styles.addItemBtn,
                   {
@@ -134,10 +122,16 @@ export default function InventoryScreen() {
           <View style={styles.mainTable}>
             <InvTable data={products} onEditRefresh={loadAllProductData} />
           </View>
-          {/* tbl item cnt */}
           <View style={{}}>{/* table item tab view btn */}</View>
         </View>
       </ScrollView>
+      <AddModal
+        visible={addModalOpen}
+        onClose={() => {
+          setAddModalOpen(false);
+        }}
+        onAdd={loadAllProductData}
+      />
     </SafeAreaView>
   );
 }

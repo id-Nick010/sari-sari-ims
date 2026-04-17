@@ -1,9 +1,8 @@
 import { useInventoryController } from "@/src/controllers/InventoryController";
-import { Product } from "@/src/models/Product";
 import VarColors from "@/src/theme/colors";
 import VarContainers from "@/src/theme/containers";
 import VarTypo from "@/src/theme/typography";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Modal,
   Pressable,
@@ -14,43 +13,47 @@ import {
 } from "react-native";
 import NumberField from "../inputFields/number-field";
 
-interface EditModalProps {
+interface AddModalProps {
   visible: boolean;
   onClose: () => void;
-  dataId: number;
-  onEdit: () => void;
+  onAdd: () => void;
 }
 
-export default function EditModal({
-  visible,
-  onClose,
-  dataId,
-  onEdit,
-}: EditModalProps) {
-  const { getProductById, editProduct } = useInventoryController();
+interface CreateProductModel {
+  category: string;
+  name: string;
+  barcode: string;
+  image_url: string;
+  cost_price: number;
+  selling_price: number;
+  quantity: number;
+  low_stock_threshold: number;
+}
 
-  const [product, setProduct] = useState<Product | null>(null);
+export default function AddModal({ visible, onClose, onAdd }: AddModalProps) {
+  const { createProduct } = useInventoryController();
 
-  useEffect(() => {
-    (async () => {
-      const newProd = await getProductById(dataId);
-      setProduct(newProd);
-    })();
-  }, [dataId, getProductById]);
-
-  if (!product) return null;
+  const [product, setProduct] = useState({
+    category: "_",
+    name: "_",
+    barcode: "_",
+    image_url: "_",
+    cost_price: 0,
+    selling_price: 0,
+    quantity: 0,
+    low_stock_threshold: 0,
+  });
 
   //used generic for easy editing for each data in product
-  const updateProductField = <K extends keyof Product>(
+  const updateProductField = <K extends keyof CreateProductModel>(
     key: K,
-    value: Product[K],
+    value: CreateProductModel[K],
   ) => {
     setProduct((prev) => (prev ? { ...prev, [key]: value } : prev));
   };
 
-  const sendEditToDB = async () => {
-    await editProduct(
-      product.id,
+  const sendNewDataToDB = async () => {
+    await createProduct(
       product.category,
       product.name,
       product.barcode,
@@ -60,7 +63,7 @@ export default function EditModal({
       product.quantity,
       product.low_stock_threshold,
     );
-    onEdit();
+    onAdd();
     onClose();
   };
 
@@ -74,13 +77,13 @@ export default function EditModal({
       <View style={styles.overlay}>
         <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
         <View style={styles.modalBox}>
-          <Text style={styles.headerText}>Edit Item</Text>
+          <Text style={styles.headerText}>Add New Item</Text>
           <View style={styles.dividerSpace} />
           <Text style={styles.fieldNameText}>Item Name</Text>
           <View style={styles.textFieldFrame}>
             <TextInput
               style={styles.textField}
-              value={product.name}
+              placeholder={"Enter item name"}
               onChangeText={(val) => updateProductField("name", val)}
             />
           </View>
@@ -89,7 +92,7 @@ export default function EditModal({
           <View style={styles.textFieldFrame}>
             <TextInput
               style={styles.textField}
-              value={product.barcode}
+              placeholder={"Enter or Scan Barcode"}
               onChangeText={(val) => updateProductField("barcode", val)}
             />
           </View>
@@ -97,7 +100,7 @@ export default function EditModal({
           <View style={styles.textFieldFrame}>
             <TextInput
               style={styles.textField}
-              value={product.category}
+              placeholder={"Select Category"}
               onChangeText={(val) => updateProductField("category", val)}
             />
           </View>
@@ -135,7 +138,7 @@ export default function EditModal({
           <View style={styles.textFieldFrame}>
             <TextInput
               style={styles.textField}
-              value={product.image_url}
+              placeholder={"No image Chosen"}
               onChangeText={(val) => updateProductField("image_url", val)}
             />
           </View>
@@ -167,12 +170,12 @@ export default function EditModal({
                 styles.modalBtn,
                 { backgroundColor: VarColors.primary.c300 },
               ]}
-              onPress={sendEditToDB}
+              onPress={sendNewDataToDB}
             >
               <Text
                 style={[styles.modalBtnText, { color: VarColors.neutral.c100 }]}
               >
-                Edit Item
+                Add Item
               </Text>
             </Pressable>
           </View>

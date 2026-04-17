@@ -97,15 +97,13 @@ export default function InvTable({ data, onEditRefresh }: InvTableProps) {
         <Text style={styles.cellText}>{p.status}</Text>
       </DataTable.Cell>
       <DataTable.Cell style={styles.cell}>
-        <Text style={styles.cellText}>
-          <Pressable
-            style={styles.editBtn}
-            onPress={() => setEditModalOpen({ isVisible: true, dataId: p.id })}
-          >
-            <Ionicons name="create-outline" size={15} />
-            <Text>Edit</Text>
-          </Pressable>
-        </Text>
+        <Pressable
+          style={styles.editBtn}
+          onPress={() => setEditModalOpen({ isVisible: true, dataId: p.id })}
+        >
+          <Ionicons name="create-outline" size={15} />
+          <Text>Edit</Text>
+        </Pressable>
       </DataTable.Cell>
     </DataTable.Row>
   ));
