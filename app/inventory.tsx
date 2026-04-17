@@ -132,7 +132,7 @@ export default function InventoryScreen() {
           {/* <View style={{ flex: 1 }}></View> */}
           {/* main inventory tbl */}
           <View style={styles.mainTable}>
-            <InvTable data={products} />
+            <InvTable data={products} onEditRefresh={loadAllProductData} />
           </View>
           {/* tbl item cnt */}
           <View style={{}}>{/* table item tab view btn */}</View>

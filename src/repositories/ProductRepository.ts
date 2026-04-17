@@ -15,7 +15,7 @@ export const ProductRepository = {
     );
   },
 
-  async insert(
+  async insertProduct(
     category: string,
     name: string,
     barcode: string,
@@ -44,6 +44,48 @@ export const ProductRepository = {
         lowStockThreshold,
         createdAtString,
         updatedAtString,
+      ],
+    );
+  },
+
+  async updateProduct(
+    id: number,
+    category: string,
+    name: string,
+    barcode: string,
+    imageUrl: string,
+    costPrice: number,
+    sellingPrice: number,
+    quantity: number,
+    lowStockThreshold: number,
+    updatedAt: Date,
+  ): Promise<void> {
+    const db = await openDB();
+    const updatedAtString = updatedAt.toISOString();
+
+    await db.runAsync(
+      `UPDATE products
+     SET category = ?, 
+         name = ?, 
+         barcode = ?, 
+         image_url = ?, 
+         cost_price = ?, 
+         selling_price = ?, 
+         quantity = ?, 
+         low_stock_threshold = ?, 
+         updated_at = ?
+     WHERE id = ?`,
+      [
+        category,
+        name,
+        barcode,
+        imageUrl,
+        costPrice,
+        sellingPrice,
+        quantity,
+        lowStockThreshold,
+        updatedAtString,
+        id,
       ],
     );
   },

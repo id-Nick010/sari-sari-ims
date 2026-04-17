@@ -18,14 +18,16 @@ interface EditModalProps {
   visible: boolean;
   onClose: () => void;
   dataId: number;
+  onEdit: () => void;
 }
 
 export default function EditModal({
   visible,
   onClose,
   dataId,
+  onEdit,
 }: EditModalProps) {
-  const { getProductById } = useInventoryController();
+  const { getProductById, editProduct } = useInventoryController();
 
   const [product, setProduct] = useState<Product | null>(null);
 
@@ -45,6 +47,23 @@ export default function EditModal({
   ) => {
     setProduct((prev) => (prev ? { ...prev, [key]: value } : prev));
     console.log("Product: " + product.cost_price);
+  };
+
+  const sendEditToDB = async () => {
+    await editProduct(
+      product.id,
+      product.category,
+      product.name,
+      product.barcode,
+      product.image_url,
+      product.cost_price,
+      product.selling_price,
+      product.quantity,
+      product.low_stock_threshold,
+    );
+    onEdit();
+    onClose();
+    console.log("done?");
   };
 
   return (
@@ -150,12 +169,12 @@ export default function EditModal({
                 styles.modalBtn,
                 { backgroundColor: VarColors.primary.c300 },
               ]}
-              onPress={onClose}
+              onPress={sendEditToDB}
             >
               <Text
                 style={[styles.modalBtnText, { color: VarColors.neutral.c100 }]}
               >
-                Add Item
+                Edit Item
               </Text>
             </Pressable>
           </View>

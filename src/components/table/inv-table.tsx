@@ -17,11 +17,12 @@ import CheckBox from "../check-box";
 import EditModal from "../modals/edit-modal";
 interface InvTableProps {
   data: Product[];
+  onEditRefresh: () => void;
 }
 
 const numberOfItemsPerPageList = [5, 10, 15];
 
-export default function InvTable({ data }: InvTableProps) {
+export default function InvTable({ data, onEditRefresh }: InvTableProps) {
   const [page, setPage] = useState(0);
   const [numberOfItemsPerPage, onItemsPerPageChange] = useState(
     numberOfItemsPerPageList[0],
@@ -161,6 +162,7 @@ export default function InvTable({ data }: InvTableProps) {
           setEditModalOpen((prev) => ({ isVisible: false, dataId: -1 }));
         }}
         dataId={editModalOpen.dataId}
+        onEdit={onEditRefresh}
       />
     </View>
   );
@@ -189,7 +191,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#eee",
   },
   rowImg: {
-    width: "15%",
+    width: 45,
     aspectRatio: 1 / 1,
   },
   editBtn: {

@@ -6,12 +6,12 @@ export const useInventoryController = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const loadAllProductData = async () => {
+  const loadAllProductData = useCallback(async () => {
     setLoading(true);
     const data = await InventoryService.listProduct();
     setProducts(data);
     setLoading(false);
-  };
+  }, []);
 
   const getProductById = useCallback(
     async (id: number): Promise<Product | null> => {
@@ -44,6 +44,31 @@ export const useInventoryController = () => {
     return true;
   };
 
+  const editProduct = async (
+    id: number,
+    category: string,
+    name: string,
+    barcode: string,
+    imageUrl: string,
+    costPrice: number,
+    sellingPrice: number,
+    quantity: number,
+    lowStockThreshold: number,
+  ) => {
+    await InventoryService.updateProduct(
+      id,
+      category,
+      name,
+      barcode,
+      imageUrl,
+      costPrice,
+      sellingPrice,
+      quantity,
+      lowStockThreshold,
+    );
+    return true;
+  };
+
   const resetData = async () => {
     await InventoryService.resetData();
     await loadAllProductData();
@@ -54,6 +79,7 @@ export const useInventoryController = () => {
     loadAllProductData,
     getProductById,
     createProduct,
+    editProduct,
     resetData,
   };
 };
