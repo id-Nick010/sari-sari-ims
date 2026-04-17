@@ -1,10 +1,11 @@
 import GreetingBar from "@/src/components/greeting-bar";
+import AddModal from "@/src/components/modals/add-modal";
+import DeleteModal from "@/src/components/modals/delete-modal";
 import StatCards from "@/src/components/stat-cards";
 import InvTable from "@/src/components/table/inv-table";
 import SearchBar from "@/src/components/table/search-bar";
 import ViewToggle from "@/src/components/table/view-toggle";
-import { InventoryController } from "@/src/controllers/InventoryController";
-import { Product } from "@/src/models/Product";
+import { useInventoryController } from "@/src/controllers/InventoryController";
 import VarColors from "@/src/theme/colors";
 import VarContainers from "@/src/theme/containers";
 import VarTypo from "@/src/theme/typography";
@@ -17,33 +18,17 @@ const colorStyle = VarColors;
 const contStyle = VarContainers;
 const typoStyle = VarTypo;
 
-async function addTempoInvDate() {
-  await InventoryController.createItem(
-    "Electronics",
-    "Wireless Bluetooth Headphones",
-    "8934720193845",
-    "https://example.com/images/headphones.png",
-    1199.5,
-    1898.99,
-    44,
-    9,
-  );
-}
-
 export default function InventoryScreen() {
-  // add tempo product data
-
+  const { products, loadAllProductData } = useInventoryController();
   // load products for the inventory table
-  const [products, setProducts] = useState<Product[]>([]);
-
-  const loadProductData = async () => {
-    const data = await InventoryController.loadProducts();
-    setProducts(data);
-  };
 
   useEffect(() => {
-    loadProductData();
-  }, []);
+    loadAllProductData();
+  }, [loadAllProductData]);
+
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [checkedIds, setCheckedIds] = useState<number[]>([]);
 
   // console.log(
   //   "Product data in Inventory: \n" + JSON.stringify(products, null, 2),
@@ -95,10 +80,7 @@ export default function InventoryScreen() {
               }}
             >
               <Pressable
-                onPress={async () => {
-                  await addTempoInvDate();
-                  await loadProductData();
-                }}
+                onPress={() => setAddModalOpen(true)}
                 style={({ pressed }) => [
                   styles.addItemBtn,
                   {
@@ -116,9 +98,8 @@ export default function InventoryScreen() {
                 <Text style={styles.addItemBtnText}>Add Item</Text>
               </Pressable>
               <Pressable
-                onPress={async () => {
-                  await InventoryController.resetData();
-                  loadProductData();
+                onPress={() => {
+                  setDeleteModalOpen(true);
                 }}
                 style={({ pressed }) => [
                   styles.delItemBtn,
@@ -141,12 +122,31 @@ export default function InventoryScreen() {
           {/* <View style={{ flex: 1 }}></View> */}
           {/* main inventory tbl */}
           <View style={styles.mainTable}>
-            <InvTable data={products} />
+            <InvTable
+              data={products}
+              onEditRefresh={loadAllProductData}
+              checkedIds={checkedIds}
+              setCheckedIds={setCheckedIds}
+            />
           </View>
-          {/* tbl item cnt */}
           <View style={{}}>{/* table item tab view btn */}</View>
         </View>
       </ScrollView>
+      <AddModal
+        visible={addModalOpen}
+        onClose={() => {
+          setAddModalOpen(false);
+        }}
+        onAdd={loadAllProductData}
+      />
+      <DeleteModal
+        visible={deleteModalOpen}
+        productIds={checkedIds}
+        onClose={() => {
+          setDeleteModalOpen(false);
+        }}
+        onDelete={loadAllProductData}
+      />
     </SafeAreaView>
   );
 }

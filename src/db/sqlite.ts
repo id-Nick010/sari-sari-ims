@@ -36,7 +36,7 @@ export const initDB = async () => {
             CASE
                 WHEN quantity = 0 THEN 'Out of stock'
                 WHEN quantity <= low_stock_threshold THEN 'Low stock'
-                ELSE 'in_stock'
+                ELSE 'In stock'
             END
             ) STORED,
             created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

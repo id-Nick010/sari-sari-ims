@@ -7,7 +7,15 @@ export const ProductRepository = {
     return await db.getAllAsync<Product>("SELECT * FROM products");
   },
 
-  async insert(
+  async getDataById(id: number): Promise<Product | null> {
+    const db = await openDB();
+    return await db.getFirstAsync<Product>(
+      "SELECT * FROM products WHERE id = ?",
+      [id],
+    );
+  },
+
+  async insertProduct(
     category: string,
     name: string,
     barcode: string,
@@ -40,8 +48,62 @@ export const ProductRepository = {
     );
   },
 
+  async updateProduct(
+    id: number,
+    category: string,
+    name: string,
+    barcode: string,
+    imageUrl: string,
+    costPrice: number,
+    sellingPrice: number,
+    quantity: number,
+    lowStockThreshold: number,
+    updatedAt: Date,
+  ): Promise<void> {
+    const db = await openDB();
+    const updatedAtString = updatedAt.toISOString();
+
+    await db.runAsync(
+      `UPDATE products
+     SET category = ?, 
+         name = ?, 
+         barcode = ?, 
+         image_url = ?, 
+         cost_price = ?, 
+         selling_price = ?, 
+         quantity = ?, 
+         low_stock_threshold = ?, 
+         updated_at = ?
+     WHERE id = ?`,
+      [
+        category,
+        name,
+        barcode,
+        imageUrl,
+        costPrice,
+        sellingPrice,
+        quantity,
+        lowStockThreshold,
+        updatedAtString,
+        id,
+      ],
+    );
+  },
+
   async resetData(): Promise<void> {
     const db = await openDB();
     await db.runAsync("DELETE FROM products");
+  },
+
+  async deleteBulk(productIds: number[]): Promise<boolean> {
+    const db = await openDB();
+    const placeholders = productIds.map(() => "?").join(",");
+    await db.execAsync("BEGIN");
+    await db.runAsync(
+      `DELETE FROM products WHERE id IN (${placeholders})`,
+      productIds,
+    );
+    await db.execAsync("COMMIT");
+    return false;
   },
 };

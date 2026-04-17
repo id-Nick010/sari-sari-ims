@@ -7,7 +7,7 @@ export interface Product {
   cost_price: number;
   selling_price: number;
   quantity: number;
-  low_stock_Threshold: number;
+  low_stock_threshold: number;
   status: string;
   created_at: Date;
   updated_at: Date;

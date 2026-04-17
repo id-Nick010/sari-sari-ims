@@ -1,12 +1,26 @@
+import { useCallback, useState } from "react";
 import { Product } from "../models/Product";
 import { InventoryService } from "../services/InventoryService";
 
-export const InventoryController = {
-  async loadProducts(): Promise<Product[]> {
-    return await InventoryService.listProduct();
-  },
+export const useInventoryController = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  async createItem(
+  const loadAllProductData = useCallback(async () => {
+    setLoading(true);
+    const data = await InventoryService.listProduct();
+    setProducts(data);
+    setLoading(false);
+  }, []);
+
+  const getProductById = useCallback(
+    async (id: number): Promise<Product | null> => {
+      return InventoryService.getProductById(id);
+    },
+    [],
+  );
+
+  const createProduct = async (
     category: string,
     name: string,
     barcode: string,
@@ -15,7 +29,7 @@ export const InventoryController = {
     sellingPrice: number,
     quantity: number,
     lowStockThreshold: number,
-  ) {
+  ) => {
     await InventoryService.addProduct(
       category,
       name,
@@ -26,10 +40,52 @@ export const InventoryController = {
       quantity,
       lowStockThreshold,
     );
+    await loadAllProductData();
     return true;
-  },
+  };
 
-  async resetData() {
-    InventoryService.resetData();
-  },
+  const editProduct = async (
+    id: number,
+    category: string,
+    name: string,
+    barcode: string,
+    imageUrl: string,
+    costPrice: number,
+    sellingPrice: number,
+    quantity: number,
+    lowStockThreshold: number,
+  ) => {
+    await InventoryService.updateProduct(
+      id,
+      category,
+      name,
+      barcode,
+      imageUrl,
+      costPrice,
+      sellingPrice,
+      quantity,
+      lowStockThreshold,
+    );
+    return true;
+  };
+
+  const resetData = async () => {
+    await InventoryService.resetData();
+    await loadAllProductData();
+  };
+
+  const deleteProductBulk = async (productIds: number[]) => {
+    await InventoryService.deleteProductBulk(productIds);
+    return true;
+  };
+  return {
+    products,
+    loading,
+    loadAllProductData,
+    getProductById,
+    createProduct,
+    editProduct,
+    resetData,
+    deleteProductBulk,
+  };
 };

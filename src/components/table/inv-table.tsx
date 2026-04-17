@@ -1,17 +1,35 @@
 import { Product } from "@/src/models/Product";
 import VarColors from "@/src/theme/colors";
+import VarContainers from "@/src/theme/containers";
 import VarTypo from "@/src/theme/typography";
+import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { DataTable } from "react-native-paper";
 import CheckBox from "../check-box";
+import EditModal from "../modals/edit-modal";
 interface InvTableProps {
   data: Product[];
+  checkedIds: number[];
+  setCheckedIds: React.Dispatch<React.SetStateAction<number[]>>;
+  onEditRefresh: () => void;
 }
 
 const numberOfItemsPerPageList = [5, 10, 15];
 
-export default function InvTable({ data }: InvTableProps) {
+export default function InvTable({
+  data,
+  checkedIds,
+  setCheckedIds,
+  onEditRefresh,
+}: InvTableProps) {
   const [page, setPage] = useState(0);
   const [numberOfItemsPerPage, onItemsPerPageChange] = useState(
     numberOfItemsPerPageList[0],
@@ -19,8 +37,11 @@ export default function InvTable({ data }: InvTableProps) {
   const from = page * numberOfItemsPerPage;
   const to = Math.min((page + 1) * numberOfItemsPerPage, data.length);
 
-  //row checkbox rules
-  const [checkedIds, setCheckedIds] = useState<number[]>([]);
+  //modal rules
+  const [editModalOpen, setEditModalOpen] = useState({
+    isVisible: false,
+    dataId: -1,
+  });
 
   const toggleSelection = (id: number, newValue: boolean) => {
     setCheckedIds((curr) => {
@@ -80,7 +101,13 @@ export default function InvTable({ data }: InvTableProps) {
         <Text style={styles.cellText}>{p.status}</Text>
       </DataTable.Cell>
       <DataTable.Cell style={styles.cell}>
-        <Text style={styles.cellText}>OO Edit</Text>
+        <Pressable
+          style={styles.editBtn}
+          onPress={() => setEditModalOpen({ isVisible: true, dataId: p.id })}
+        >
+          <Ionicons name="create-outline" size={15} />
+          <Text>Edit</Text>
+        </Pressable>
       </DataTable.Cell>
     </DataTable.Row>
   ));
@@ -131,6 +158,14 @@ export default function InvTable({ data }: InvTableProps) {
           selectPageDropdownLabel={"Rows/page:"}
         />
       </DataTable>
+      <EditModal
+        visible={editModalOpen.isVisible}
+        onClose={() => {
+          setEditModalOpen((prev) => ({ isVisible: false, dataId: -1 }));
+        }}
+        dataId={editModalOpen.dataId}
+        onEdit={onEditRefresh}
+      />
     </View>
   );
 }
@@ -158,7 +193,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#eee",
   },
   rowImg: {
-    width: "15%",
+    width: 45,
     aspectRatio: 1 / 1,
+  },
+  editBtn: {
+    gap: 5,
+    padding: "9%",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: VarContainers.radius.s2,
+    borderWidth: VarContainers.stroke.s1,
+    borderColor: VarColors.neutral.c200,
   },
 });
