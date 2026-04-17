@@ -101,34 +101,53 @@ export default function EditModal({
               onChangeText={(val) => updateProductField("category", val)}
             />
           </View>
-          <View
-            style={{
-              flexDirection: "row",
-              gap: "3%",
-            }}
-          >
-            <View style={styles.numberField}>
-              <Text style={styles.fieldNameText}>Quantity</Text>
-              <NumberField
-                value={product.quantity}
-                setValue={(val) => updateProductField("quantity", val)}
-              />
+          <View style={{ flexDirection: "column", gap: "3%" }}>
+            <View
+              style={{
+                flexDirection: "row",
+                width: "100%",
+                gap: "3%",
+              }}
+            >
+              <View style={styles.numberField}>
+                <Text style={styles.fieldNameText}>Quantity</Text>
+                <NumberField
+                  value={product.quantity}
+                  setValue={(val) => updateProductField("quantity", val)}
+                />
+              </View>
+              <View style={styles.numberField}>
+                <Text style={styles.fieldNameText}>Low Stock Threshold</Text>
+                <NumberField
+                  value={product.low_stock_threshold}
+                  setValue={(val) =>
+                    updateProductField("low_stock_threshold", val)
+                  }
+                />
+              </View>
             </View>
+            <View
+              style={{
+                flexDirection: "row",
+                width: "100%",
+                gap: "3%",
+              }}
+            >
+              <View style={styles.numberField}>
+                <Text style={styles.fieldNameText}>Cost Price</Text>
+                <NumberField
+                  value={product.cost_price}
+                  setValue={(val) => updateProductField("cost_price", val)}
+                />
+              </View>
+              <View style={styles.numberField}>
+                <Text style={styles.fieldNameText}>Selling Price</Text>
 
-            <View style={styles.numberField}>
-              <Text style={styles.fieldNameText}>Cost Price</Text>
-              <NumberField
-                value={product.cost_price}
-                setValue={(val) => updateProductField("cost_price", val)}
-              />
-            </View>
-            <View style={styles.numberField}>
-              <Text style={styles.fieldNameText}>Selling Price</Text>
-
-              <NumberField
-                value={product.selling_price}
-                setValue={(val) => updateProductField("selling_price", val)}
-              />
+                <NumberField
+                  value={product.selling_price}
+                  setValue={(val) => updateProductField("selling_price", val)}
+                />
+              </View>
             </View>
           </View>
           <Text style={styles.fieldNameText}>Product Image</Text>
@@ -237,7 +256,7 @@ const styles = StyleSheet.create({
     color: VarColors.neutral.c600,
   },
   numberField: {
-    flex: 1,
+    flex: 2,
     flexDirection: "column",
   },
 });

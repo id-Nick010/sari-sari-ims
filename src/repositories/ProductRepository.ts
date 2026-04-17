@@ -94,4 +94,16 @@ export const ProductRepository = {
     const db = await openDB();
     await db.runAsync("DELETE FROM products");
   },
+
+  async deleteBulk(productIds: number[]): Promise<boolean> {
+    const db = await openDB();
+    const placeholders = productIds.map(() => "?").join(",");
+    await db.execAsync("BEGIN");
+    await db.runAsync(
+      `DELETE FROM products WHERE id IN (${placeholders})`,
+      productIds,
+    );
+    await db.execAsync("COMMIT");
+    return false;
+  },
 };

@@ -74,6 +74,10 @@ export const InventoryService = {
 
   async resetData(): Promise<void> {
     await ProductRepository.resetData();
-    console.log("Data Deleted!");
+  },
+
+  async deleteProductBulk(productIds: number[]): Promise<boolean> {
+    await ProductRepository.deleteBulk(productIds);
+    return true;
   },
 };

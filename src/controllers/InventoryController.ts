@@ -73,6 +73,11 @@ export const useInventoryController = () => {
     await InventoryService.resetData();
     await loadAllProductData();
   };
+
+  const deleteProductBulk = async (productIds: number[]) => {
+    await InventoryService.deleteProductBulk(productIds);
+    return true;
+  };
   return {
     products,
     loading,
@@ -81,5 +86,6 @@ export const useInventoryController = () => {
     createProduct,
     editProduct,
     resetData,
+    deleteProductBulk,
   };
 };

@@ -1,5 +1,6 @@
 import GreetingBar from "@/src/components/greeting-bar";
 import AddModal from "@/src/components/modals/add-modal";
+import DeleteModal from "@/src/components/modals/delete-modal";
 import StatCards from "@/src/components/stat-cards";
 import InvTable from "@/src/components/table/inv-table";
 import SearchBar from "@/src/components/table/search-bar";
@@ -18,8 +19,7 @@ const contStyle = VarContainers;
 const typoStyle = VarTypo;
 
 export default function InventoryScreen() {
-  const { products, loadAllProductData, createProduct, resetData } =
-    useInventoryController();
+  const { products, loadAllProductData } = useInventoryController();
   // load products for the inventory table
 
   useEffect(() => {
@@ -27,6 +27,8 @@ export default function InventoryScreen() {
   }, [loadAllProductData]);
 
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [checkedIds, setCheckedIds] = useState<number[]>([]);
 
   // console.log(
   //   "Product data in Inventory: \n" + JSON.stringify(products, null, 2),
@@ -97,7 +99,7 @@ export default function InventoryScreen() {
               </Pressable>
               <Pressable
                 onPress={() => {
-                  resetData();
+                  setDeleteModalOpen(true);
                 }}
                 style={({ pressed }) => [
                   styles.delItemBtn,
@@ -120,7 +122,12 @@ export default function InventoryScreen() {
           {/* <View style={{ flex: 1 }}></View> */}
           {/* main inventory tbl */}
           <View style={styles.mainTable}>
-            <InvTable data={products} onEditRefresh={loadAllProductData} />
+            <InvTable
+              data={products}
+              onEditRefresh={loadAllProductData}
+              checkedIds={checkedIds}
+              setCheckedIds={setCheckedIds}
+            />
           </View>
           <View style={{}}>{/* table item tab view btn */}</View>
         </View>
@@ -131,6 +138,14 @@ export default function InventoryScreen() {
           setAddModalOpen(false);
         }}
         onAdd={loadAllProductData}
+      />
+      <DeleteModal
+        visible={deleteModalOpen}
+        productIds={checkedIds}
+        onClose={() => {
+          setDeleteModalOpen(false);
+        }}
+        onDelete={loadAllProductData}
       />
     </SafeAreaView>
   );

@@ -17,21 +17,25 @@ import CheckBox from "../check-box";
 import EditModal from "../modals/edit-modal";
 interface InvTableProps {
   data: Product[];
+  checkedIds: number[];
+  setCheckedIds: React.Dispatch<React.SetStateAction<number[]>>;
   onEditRefresh: () => void;
 }
 
 const numberOfItemsPerPageList = [5, 10, 15];
 
-export default function InvTable({ data, onEditRefresh }: InvTableProps) {
+export default function InvTable({
+  data,
+  checkedIds,
+  setCheckedIds,
+  onEditRefresh,
+}: InvTableProps) {
   const [page, setPage] = useState(0);
   const [numberOfItemsPerPage, onItemsPerPageChange] = useState(
     numberOfItemsPerPageList[0],
   );
   const from = page * numberOfItemsPerPage;
   const to = Math.min((page + 1) * numberOfItemsPerPage, data.length);
-
-  //row checkbox rules
-  const [checkedIds, setCheckedIds] = useState<number[]>([]);
 
   //modal rules
   const [editModalOpen, setEditModalOpen] = useState({
