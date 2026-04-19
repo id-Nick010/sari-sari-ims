@@ -34,6 +34,13 @@ export default function InventoryScreen() {
   //   "Product data in Inventory: \n" + JSON.stringify(products, null, 2),
   // );
 
+  const productDeleted = () => {
+    setCheckedIds([]);
+    loadAllProductData();
+  };
+
+  useEffect(() => console.log("products: " + products.length), [products]);
+
   return (
     <SafeAreaView style={styles.screen}>
       <ScrollView>
@@ -141,11 +148,12 @@ export default function InventoryScreen() {
       />
       <DeleteModal
         visible={deleteModalOpen}
+        data={products}
         productIds={checkedIds}
         onClose={() => {
           setDeleteModalOpen(false);
         }}
-        onDelete={loadAllProductData}
+        onDelete={productDeleted}
       />
     </SafeAreaView>
   );
