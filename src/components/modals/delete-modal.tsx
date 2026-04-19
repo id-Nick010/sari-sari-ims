@@ -32,6 +32,12 @@ export default function DeleteModal({
     .filter((p) => productIds.includes(p.id))
     .map((p) => p.name);
 
+  const maxItems = 6;
+  const displayItems =
+    headerItems.length > maxItems
+      ? headerItems.slice(0, maxItems).join(", ") + "..."
+      : headerItems.join(", ");
+
   return (
     <Modal
       visible={visible}
@@ -43,8 +49,11 @@ export default function DeleteModal({
         <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
         <View style={styles.modalBox}>
           <Ionicons style={styles.deleteIcon} name="trash-outline" size={30} />
-          <Text style={styles.headerText}>
-            Delete {headerItems.join(", ")}?
+          <Text
+            style={styles.headerText}
+            onPress={() => console.log("add pop up here!")}
+          >
+            Delete {displayItems}?
           </Text>
           <Text style={styles.subText}>
             Are you sure you want to delete{" "}
