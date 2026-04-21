@@ -44,6 +44,18 @@ export default function AddModal({ visible, onClose, onAdd }: AddModalProps) {
     low_stock_threshold: 0,
   });
 
+  const resetAddData = () =>
+    setProduct({
+      category: "_",
+      name: "_",
+      barcode: "_",
+      image_url: "_",
+      cost_price: 0,
+      selling_price: 0,
+      quantity: 0,
+      low_stock_threshold: 0,
+    });
+
   //used generic for easy editing for each data in product
   const updateProductField = <K extends keyof CreateProductModel>(
     key: K,
@@ -64,6 +76,7 @@ export default function AddModal({ visible, onClose, onAdd }: AddModalProps) {
       product.low_stock_threshold,
     );
     onAdd();
+    resetAddData();
     onClose();
   };
 
