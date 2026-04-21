@@ -112,13 +112,30 @@ export default function InvTable({
     </DataTable.Row>
   ));
 
+  const selectAllOrReset = () => {
+    if (checkedIds.length > 0) {
+      setCheckedIds([]);
+    } else {
+      data.map((d) => {
+        setCheckedIds((c) => [...c, d.id]);
+      });
+    }
+  };
+
   return (
     <View>
       <DataTable>
         <DataTable.Header style={styles.row}>
           <DataTable.Title style={{ flex: 1 }}>
-            <Text style={styles.cellText}>
-              <Text style={styles.cellText}>__</Text>
+            <Text style={styles.cellText} onPress={selectAllOrReset}>
+              <Text style={styles.cellText}>
+                {checkedIds.length > 0 ? (
+                  <Ionicons name="checkmark-done-outline" size={20} />
+                ) : (
+                  <Ionicons name="git-commit-outline" size={20} />
+                )}
+                {checkedIds.length > 0 ? checkedIds.length : ""}
+              </Text>
             </Text>
           </DataTable.Title>
           <DataTable.Title style={{ flex: 5 }}>
