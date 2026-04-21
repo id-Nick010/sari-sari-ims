@@ -1,51 +1,59 @@
 import VarColors from "@/src/theme/colors";
 import VarContainers from "@/src/theme/containers";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 type ViewToggleProps = {
   labelA: string;
   labelB: string;
+  currValue: number;
+  setValue: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export default function ViewToggle({ labelA, labelB }: ViewToggleProps) {
-  const [activeBtn, setActiveBtn] = useState(1);
-
+export default function ViewToggle({
+  labelA,
+  labelB,
+  currValue,
+  setValue,
+}: ViewToggleProps) {
   return (
     <View style={styles.container}>
       <Pressable
-        onPress={() => setActiveBtn(1)}
+        onPress={() => {
+          setValue(1);
+        }}
         style={[
           styles.toggleBtn,
-          activeBtn === 1 ? styles.btnEnabled : styles.btnDisabled,
+          currValue === 1 ? styles.btnEnabled : styles.btnDisabled,
         ]}
       >
         <Ionicons
           name="list-outline"
           size={22}
-          style={[activeBtn === 1 ? styles.textEnabled : styles.textDisabled]}
+          style={[currValue === 1 ? styles.textEnabled : styles.textDisabled]}
         />
         <Text
-          style={[activeBtn === 1 ? styles.textEnabled : styles.textDisabled]}
+          style={[currValue === 1 ? styles.textEnabled : styles.textDisabled]}
         >
           {labelA}
         </Text>
       </Pressable>
       <Pressable
-        onPress={() => setActiveBtn(2)}
+        onPress={() => {
+          setValue(2);
+        }}
         style={[
           styles.toggleBtn,
-          activeBtn === 2 ? styles.btnEnabled : styles.btnDisabled,
+          currValue === 2 ? styles.btnEnabled : styles.btnDisabled,
         ]}
       >
         <Ionicons
           name="grid-outline"
           size={22}
-          style={[activeBtn === 2 ? styles.textEnabled : styles.textDisabled]}
+          style={[currValue === 2 ? styles.textEnabled : styles.textDisabled]}
         />
         <Text
-          style={[activeBtn === 2 ? styles.textEnabled : styles.textDisabled]}
+          style={[currValue === 2 ? styles.textEnabled : styles.textDisabled]}
         >
           {labelB}
         </Text>

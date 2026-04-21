@@ -29,6 +29,7 @@ export default function InventoryScreen() {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [checkedIds, setCheckedIds] = useState<number[]>([]);
+  const [view, setView] = useState<number>(1);
 
   // console.log(
   //   "Product data in Inventory: \n" + JSON.stringify(products, null, 2),
@@ -73,7 +74,12 @@ export default function InventoryScreen() {
                 <SearchBar />
               </View>
               <View style={{ flex: 3, justifyContent: "center" }}>
-                <ViewToggle labelA="Table" labelB="Cards" />
+                <ViewToggle
+                  labelA="Table"
+                  labelB="Cards"
+                  currValue={view}
+                  setValue={setView}
+                />
               </View>
             </View>
             {/* Table Action Buttons */}
@@ -128,15 +134,18 @@ export default function InventoryScreen() {
           </View>
           {/* <View style={{ flex: 1 }}></View> */}
           {/* main inventory tbl */}
-          <View style={styles.mainTable}>
-            <InvTable
-              data={products}
-              onEditRefresh={loadAllProductData}
-              checkedIds={checkedIds}
-              setCheckedIds={setCheckedIds}
-            />
+          <View style={styles.mainView}>
+            {view === 1 ? (
+              <InvTable
+                data={products}
+                onEditRefresh={loadAllProductData}
+                checkedIds={checkedIds}
+                setCheckedIds={setCheckedIds}
+              />
+            ) : (
+              <View></View>
+            )}
           </View>
-          <View style={{}}>{/* table item tab view btn */}</View>
         </View>
       </ScrollView>
       <AddModal
@@ -212,7 +221,7 @@ const styles = StyleSheet.create({
   delItemBtnIcon: {
     color: colorStyle.red.c200,
   },
-  mainTable: {
+  mainView: {
     flex: 7,
     paddingInline: contStyle.spacing.s4,
   },
