@@ -3,11 +3,11 @@ import VarColors from "@/src/theme/colors";
 import VarContainers from "@/src/theme/containers";
 import VarTypo from "@/src/theme/typography";
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
+  FlatList,
   Image,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -22,7 +22,7 @@ interface InvTableProps {
   onEditRefresh: () => void;
 }
 
-const numberOfItemsPerPageList = [5, 10, 15];
+const numberOfItemsPerPageList = [6, 10, 15];
 
 export default function InvTable({
   data,
@@ -43,136 +43,167 @@ export default function InvTable({
     dataId: -1,
   });
 
-  const toggleSelection = (id: number, newValue: boolean) => {
-    setCheckedIds((curr) => {
-      if (newValue) {
-        return curr.includes(id) ? curr : [...curr, id];
-      } else {
-        return curr.filter((x) => x !== id);
-      }
-    });
-  };
+  const toggleSelection = useCallback(
+    (id: number, newValue: boolean) => {
+      setCheckedIds((curr) => {
+        if (newValue) {
+          return curr.includes(id) ? curr : [...curr, id];
+        } else {
+          return curr.filter((x) => x !== id);
+        }
+      });
+    },
+    [setCheckedIds],
+  );
 
   useEffect(() => {
     setPage(0);
   }, [numberOfItemsPerPage]);
 
-  const renderRows = data.slice(from, to).map((p) => (
-    <DataTable.Row style={styles.row} key={p.id}>
-      <DataTable.Cell style={{ flex: 1 }}>
-        <CheckBox
-          checked={checkedIds.includes(p.id)}
-          onChange={(newValue) => toggleSelection(p.id, newValue)}
-        />
-      </DataTable.Cell>
-      <DataTable.Cell style={[styles.cell, { flex: 5 }]}>
-        <View style={{ flexDirection: "row" }}>
-          <Image
-            source={require("@/assets/images/react-logo.png")}
-            style={styles.rowImg}
-          />
-          <View>
-            <Text style={styles.cellText}>{p.name} </Text>
-            <Text
-              onPress={() => console.log("btn clicked")}
-              style={styles.cellText}
-            >
-              {p.barcode}
-            </Text>
-          </View>
-        </View>
-      </DataTable.Cell>
-      <DataTable.Cell style={styles.cell}>
-        <Text style={styles.cellText}>{p.category}</Text>
-      </DataTable.Cell>
-      <DataTable.Cell style={styles.cell}>
-        <Text style={styles.cellText}>{p.quantity}</Text>
-      </DataTable.Cell>
-      <DataTable.Cell style={styles.cell}>
-        <Text style={styles.cellText}>{p.cost_price}</Text>
-      </DataTable.Cell>
-      <DataTable.Cell style={styles.cell}>
-        <Text style={styles.cellText}>{p.selling_price}</Text>
-      </DataTable.Cell>
-      <DataTable.Cell style={styles.cell}>
-        <Text style={styles.cellText}>000.00</Text>
-      </DataTable.Cell>
-      <DataTable.Cell style={styles.cell}>
-        <Text style={styles.cellText}>{p.status}</Text>
-      </DataTable.Cell>
-      <DataTable.Cell style={styles.cell}>
-        <Pressable
-          style={styles.editBtn}
-          onPress={() => setEditModalOpen({ isVisible: true, dataId: p.id })}
-        >
-          <Ionicons name="create-outline" size={15} />
-          <Text>Edit</Text>
-        </Pressable>
-      </DataTable.Cell>
-    </DataTable.Row>
-  ));
+  const pageData = useMemo(() => data.slice(from, to), [data, from, to]);
 
-  const selectAllOrReset = () => {
+  const renderItem = useCallback(
+    ({ item }: { item: Product }) => {
+      return (
+        <DataTable.Row style={styles.row} key={item.id}>
+          <DataTable.Cell style={{ flex: 1 }}>
+            <CheckBox
+              checked={checkedIds.includes(item.id)}
+              onChange={(newValue) => toggleSelection(item.id, newValue)}
+            />
+          </DataTable.Cell>
+
+          <DataTable.Cell style={[styles.cell, { flex: 5 }]}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Image
+                source={require("@/assets/images/react-logo.png")}
+                style={styles.rowImg}
+              />
+              <View style={{ marginLeft: 8 }}>
+                <Text style={styles.cellText}>{item.name}</Text>
+                <Text
+                  onPress={() => console.log("btn clicked")}
+                  style={styles.cellText}
+                >
+                  {item.barcode}
+                </Text>
+              </View>
+            </View>
+          </DataTable.Cell>
+
+          <DataTable.Cell style={styles.cell}>
+            <Text style={styles.cellText}>{item.category}</Text>
+          </DataTable.Cell>
+
+          <DataTable.Cell style={styles.cell}>
+            <Text style={styles.cellText}>{item.quantity}</Text>
+          </DataTable.Cell>
+
+          <DataTable.Cell style={styles.cell}>
+            <Text style={styles.cellText}>{item.cost_price}</Text>
+          </DataTable.Cell>
+
+          <DataTable.Cell style={styles.cell}>
+            <Text style={styles.cellText}>{item.selling_price}</Text>
+          </DataTable.Cell>
+
+          <DataTable.Cell style={styles.cell}>
+            <Text style={styles.cellText}>000.00</Text>
+          </DataTable.Cell>
+
+          <DataTable.Cell style={styles.cell}>
+            <Text style={styles.cellText}>{item.status}</Text>
+          </DataTable.Cell>
+
+          <DataTable.Cell style={styles.cell}>
+            <Pressable
+              style={styles.editBtn}
+              onPress={() =>
+                setEditModalOpen({ isVisible: true, dataId: item.id })
+              }
+            >
+              <Ionicons name="create-outline" size={15} />
+              <Text>Edit</Text>
+            </Pressable>
+          </DataTable.Cell>
+        </DataTable.Row>
+      );
+    },
+    [checkedIds, toggleSelection],
+  );
+
+  const selectAllOrReset = useCallback(() => {
     if (checkedIds.length > 0) {
       setCheckedIds([]);
     } else {
-      data.map((d) => {
-        setCheckedIds((c) => [...c, d.id]);
-      });
+      setCheckedIds(data.map((d) => d.id));
     }
-  };
+  }, [checkedIds.length, data, setCheckedIds]);
 
   return (
     <View>
       <DataTable>
-        <DataTable.Header style={styles.row}>
-          <DataTable.Title style={{ flex: 1 }}>
-            <Text style={styles.cellText} onPress={selectAllOrReset}>
-              <Text style={styles.cellText}>
-                {checkedIds.length > 0 ? (
-                  <Ionicons name="checkmark-done-outline" size={20} />
-                ) : (
-                  <Ionicons name="git-commit-outline" size={20} />
-                )}
-                {checkedIds.length > 0 ? checkedIds.length : ""}
-              </Text>
-            </Text>
-          </DataTable.Title>
-          <DataTable.Title style={{ flex: 5 }}>
-            <Text style={styles.cellText}> Item Name</Text>
-          </DataTable.Title>
-          <DataTable.Title style={styles.cell}>
-            <Text style={styles.cellText}>Category</Text>
-          </DataTable.Title>
-          <DataTable.Title style={styles.cell}>
-            <Text style={styles.cellText}>Quantity</Text>
-          </DataTable.Title>
-          <DataTable.Title style={styles.cell}>
-            <Text style={styles.cellText}>Cost Price</Text>
-          </DataTable.Title>
-          <DataTable.Title style={styles.cell}>
-            <Text style={styles.cellText}>Selling Price</Text>
-          </DataTable.Title>
-          <DataTable.Title style={styles.cell}>
-            <Text style={styles.cellText}>Sales</Text>
-          </DataTable.Title>
-          <DataTable.Title style={styles.cell}>
-            <Text style={styles.cellText}>Status</Text>
-          </DataTable.Title>
-          <DataTable.Title style={styles.cell}>
-            <Text style={styles.cellText}>Actions</Text>
-          </DataTable.Title>
-        </DataTable.Header>
-        <ScrollView>{renderRows}</ScrollView>
-        <DataTable.Pagination
-          page={page}
-          numberOfPages={Math.ceil(data.length / numberOfItemsPerPage)}
-          onPageChange={(page) => setPage(page)}
-          label={`${from + 1}-${to} of ${data.length}`}
-          numberOfItemsPerPageList={numberOfItemsPerPageList}
-          numberOfItemsPerPage={numberOfItemsPerPage}
-          onItemsPerPageChange={onItemsPerPageChange}
-          selectPageDropdownLabel={"Rows/page:"}
+        <FlatList
+          data={pageData}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={renderItem}
+          ListHeaderComponent={
+            <View style={{ backgroundColor: "#fff", elevation: 4, zIndex: 10 }}>
+              <DataTable.Header style={styles.row}>
+                <DataTable.Title style={{ flex: 1 }}>
+                  <Text style={styles.cellText} onPress={selectAllOrReset}>
+                    <Text style={styles.cellText}>
+                      {checkedIds.length > 0 ? (
+                        <Ionicons name="checkmark-done-outline" size={20} />
+                      ) : (
+                        <Ionicons name="git-commit-outline" size={20} />
+                      )}
+                      {checkedIds.length > 0 ? checkedIds.length : ""}
+                    </Text>
+                  </Text>
+                </DataTable.Title>
+                <DataTable.Title style={{ flex: 5 }}>
+                  <Text style={styles.cellText}> Item Name</Text>
+                </DataTable.Title>
+                <DataTable.Title style={styles.cell}>
+                  <Text style={styles.cellText}>Category</Text>
+                </DataTable.Title>
+                <DataTable.Title style={styles.cell}>
+                  <Text style={styles.cellText}>Quantity</Text>
+                </DataTable.Title>
+                <DataTable.Title style={styles.cell}>
+                  <Text style={styles.cellText}>Cost Price</Text>
+                </DataTable.Title>
+                <DataTable.Title style={styles.cell}>
+                  <Text style={styles.cellText}>Selling Price</Text>
+                </DataTable.Title>
+                <DataTable.Title style={styles.cell}>
+                  <Text style={styles.cellText}>Sales</Text>
+                </DataTable.Title>
+                <DataTable.Title style={styles.cell}>
+                  <Text style={styles.cellText}>Status</Text>
+                </DataTable.Title>
+                <DataTable.Title style={styles.cell}>
+                  <Text style={styles.cellText}>Actions</Text>
+                </DataTable.Title>
+              </DataTable.Header>
+            </View>
+          }
+          ListFooterComponent={
+            <DataTable.Pagination
+              page={page}
+              numberOfPages={Math.ceil(data.length / numberOfItemsPerPage)}
+              onPageChange={(page) => setPage(page)}
+              label={`${from + 1}-${to} of ${data.length}`}
+              numberOfItemsPerPageList={numberOfItemsPerPageList}
+              numberOfItemsPerPage={numberOfItemsPerPage}
+              onItemsPerPageChange={onItemsPerPageChange}
+              selectPageDropdownLabel={"Rows/page:"}
+            />
+          }
+          stickyHeaderIndices={[0]}
+          style={styles.list}
+          removeClippedSubviews={true}
         />
       </DataTable>
       <EditModal
@@ -188,6 +219,7 @@ export default function InvTable({
 }
 
 const styles = StyleSheet.create({
+  list: { flexGrow: 1 },
   row: {
     flexDirection: "row",
     alignItems: "center",
