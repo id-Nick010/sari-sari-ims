@@ -1,10 +1,11 @@
 import GreetingBar from "@/src/components/greeting-bar";
+import InvCards from "@/src/components/inventory/inv-cards";
+import InvTable from "@/src/components/inventory/inv-table";
+import SearchBar from "@/src/components/inventory/search-bar";
+import ViewToggle from "@/src/components/inventory/view-toggle";
 import AddModal from "@/src/components/modals/add-modal";
 import DeleteModal from "@/src/components/modals/delete-modal";
 import StatCards from "@/src/components/stat-cards";
-import InvTable from "@/src/components/table/inv-table";
-import SearchBar from "@/src/components/table/search-bar";
-import ViewToggle from "@/src/components/table/view-toggle";
 import { useInventoryController } from "@/src/controllers/InventoryController";
 import VarColors from "@/src/theme/colors";
 import VarContainers from "@/src/theme/containers";
@@ -143,7 +144,7 @@ export default function InventoryScreen() {
                 setCheckedIds={setCheckedIds}
               />
             ) : (
-              <View></View>
+              <InvCards />
             )}
           </View>
         </View>
