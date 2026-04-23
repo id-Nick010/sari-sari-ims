@@ -141,7 +141,7 @@ export default function InventoryScreen() {
               setCheckedIds={setCheckedIds}
             />
           ) : (
-            <InvCards />
+            <InvCards data={products} />
           )}
         </View>
       </View>
