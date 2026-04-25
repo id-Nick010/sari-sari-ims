@@ -85,10 +85,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     justifyContent: "space-between",
-    marginBottom: contStyle.spacing.s5,
+    marginVertical: contStyle.spacing.s3,
   },
   card: {
     width: "24%",
+    justifyContent: "center",
     paddingVertical: contStyle.spacing.s4,
     paddingHorizontal: contStyle.spacing.s6,
     borderRadius: contStyle.radius.s7,

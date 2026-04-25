@@ -1,17 +1,18 @@
 import GreetingBar from "@/src/components/greeting-bar";
+import InvCards from "@/src/components/inventory/inv-cards";
+import InvTable from "@/src/components/inventory/inv-table";
+import SearchBar from "@/src/components/inventory/search-bar";
+import ViewToggle from "@/src/components/inventory/view-toggle";
 import AddModal from "@/src/components/modals/add-modal";
 import DeleteModal from "@/src/components/modals/delete-modal";
 import StatCards from "@/src/components/stat-cards";
-import InvTable from "@/src/components/table/inv-table";
-import SearchBar from "@/src/components/table/search-bar";
-import ViewToggle from "@/src/components/table/view-toggle";
 import { useInventoryController } from "@/src/controllers/InventoryController";
 import VarColors from "@/src/theme/colors";
 import VarContainers from "@/src/theme/containers";
 import VarTypo from "@/src/theme/typography";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const colorStyle = VarColors;
@@ -29,109 +30,121 @@ export default function InventoryScreen() {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [checkedIds, setCheckedIds] = useState<number[]>([]);
+  const [view, setView] = useState<number>(1);
 
   // console.log(
   //   "Product data in Inventory: \n" + JSON.stringify(products, null, 2),
   // );
 
+  const productDeleted = () => {
+    setCheckedIds([]);
+    loadAllProductData();
+  };
+
   return (
     <SafeAreaView style={styles.screen}>
-      <ScrollView>
-        <View style={{ flex: 1, marginInline: contStyle.spacing.s7 }}>
-          <GreetingBar />
-        </View>
-        <View style={{ flex: 2, marginInline: contStyle.spacing.s7 }}>
-          <StatCards />
-        </View>
-        <View style={styles.tableSection}>
-          {/* inventorytable  */}
+      <View style={{ flex: 1, marginInline: contStyle.spacing.s7 }}>
+        <GreetingBar />
+      </View>
+      <View style={{ flex: 2, marginInline: contStyle.spacing.s7 }}>
+        <StatCards />
+      </View>
+      <View style={styles.tableSection}>
+        {/* inventorytable  */}
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            margin: contStyle.spacing.s4,
+            gap: 10,
+          }}
+        >
+          {/* Search & View Toggle */}
           <View
             style={{
-              flex: 1,
+              flex: 6,
               flexDirection: "row",
-              justifyContent: "space-between",
-              margin: contStyle.spacing.s4,
               gap: 10,
             }}
           >
-            {/* Search & View Toggle */}
-            <View
-              style={{
-                flex: 6,
-                flexDirection: "row",
-                gap: 10,
-              }}
-            >
-              <View style={{ flex: 7, justifyContent: "center" }}>
-                <SearchBar />
-              </View>
-              <View style={{ flex: 3, justifyContent: "center" }}>
-                <ViewToggle labelA="Table" labelB="Cards" />
-              </View>
+            <View style={{ flex: 7, justifyContent: "center" }}>
+              <SearchBar />
             </View>
-            {/* Table Action Buttons */}
-            <View
-              style={{
-                flex: 4,
-                flexDirection: "row",
-                justifyContent: "flex-end",
-                alignItems: "center",
-                gap: 10,
-              }}
-            >
-              <Pressable
-                onPress={() => setAddModalOpen(true)}
-                style={({ pressed }) => [
-                  styles.addItemBtn,
-                  {
-                    backgroundColor: pressed
-                      ? "lightgrey"
-                      : colorStyle.primary.c300,
-                  },
-                ]}
-              >
-                <Ionicons
-                  style={styles.addItemBtnIcon}
-                  name="add-outline"
-                  size={20}
-                />
-                <Text style={styles.addItemBtnText}>Add Item</Text>
-              </Pressable>
-              <Pressable
-                onPress={() => {
-                  setDeleteModalOpen(true);
-                }}
-                style={({ pressed }) => [
-                  styles.delItemBtn,
-                  {
-                    backgroundColor: pressed
-                      ? "lightgrey"
-                      : colorStyle.neutral.c100,
-                  },
-                ]}
-              >
-                <Ionicons
-                  style={styles.delItemBtnIcon}
-                  name="trash-outline"
-                  size={20}
-                />
-                <Text style={styles.delItemBtnText}>Delete</Text>
-              </Pressable>
+            <View style={{ flex: 3, justifyContent: "center" }}>
+              <ViewToggle
+                labelA="Table"
+                labelB="Cards"
+                currValue={view}
+                setValue={setView}
+              />
             </View>
           </View>
-          {/* <View style={{ flex: 1 }}></View> */}
-          {/* main inventory tbl */}
-          <View style={styles.mainTable}>
+          {/* Table Action Buttons */}
+          <View
+            style={{
+              flex: 4,
+              flexDirection: "row",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
+            <Pressable
+              onPress={() => setAddModalOpen(true)}
+              style={({ pressed }) => [
+                styles.addItemBtn,
+                {
+                  backgroundColor: pressed
+                    ? "lightgrey"
+                    : colorStyle.primary.c300,
+                },
+              ]}
+            >
+              <Ionicons
+                style={styles.addItemBtnIcon}
+                name="add-outline"
+                size={20}
+              />
+              <Text style={styles.addItemBtnText}>Add Item</Text>
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                setDeleteModalOpen(true);
+              }}
+              style={({ pressed }) => [
+                styles.delItemBtn,
+                {
+                  backgroundColor: pressed
+                    ? "lightgrey"
+                    : colorStyle.neutral.c100,
+                },
+              ]}
+            >
+              <Ionicons
+                style={styles.delItemBtnIcon}
+                name="trash-outline"
+                size={20}
+              />
+              <Text style={styles.delItemBtnText}>Delete</Text>
+            </Pressable>
+          </View>
+        </View>
+        {/* <View style={{ flex: 1 }}></View> */}
+        {/* main inventory tbl */}
+        <View style={styles.mainView}>
+          {view === 1 ? (
             <InvTable
               data={products}
               onEditRefresh={loadAllProductData}
               checkedIds={checkedIds}
               setCheckedIds={setCheckedIds}
             />
-          </View>
-          <View style={{}}>{/* table item tab view btn */}</View>
+          ) : (
+            <InvCards data={products} onEditRefresh={loadAllProductData} />
+          )}
         </View>
-      </ScrollView>
+      </View>
       <AddModal
         visible={addModalOpen}
         onClose={() => {
@@ -141,11 +154,12 @@ export default function InventoryScreen() {
       />
       <DeleteModal
         visible={deleteModalOpen}
+        data={products}
         productIds={checkedIds}
         onClose={() => {
           setDeleteModalOpen(false);
         }}
-        onDelete={loadAllProductData}
+        onDelete={productDeleted}
       />
     </SafeAreaView>
   );
@@ -159,7 +173,7 @@ const styles = StyleSheet.create({
     backgroundColor: colorStyle.yellow.c10,
   },
   tableSection: {
-    flex: 7,
+    flex: 9,
     width: "95%",
     marginInline: contStyle.spacing.s7,
     backgroundColor: colorStyle.neutral.c100,
@@ -204,8 +218,8 @@ const styles = StyleSheet.create({
   delItemBtnIcon: {
     color: colorStyle.red.c200,
   },
-  mainTable: {
-    flex: 7,
+  mainView: {
+    flex: 10,
     paddingInline: contStyle.spacing.s4,
   },
 });
