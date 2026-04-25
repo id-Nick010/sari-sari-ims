@@ -209,7 +209,7 @@ export default function InvTable({
       <EditModal
         visible={editModalOpen.isVisible}
         onClose={() => {
-          setEditModalOpen((prev) => ({ isVisible: false, dataId: -1 }));
+          setEditModalOpen({ isVisible: false, dataId: -1 });
         }}
         dataId={editModalOpen.dataId}
         onEdit={onEditRefresh}
