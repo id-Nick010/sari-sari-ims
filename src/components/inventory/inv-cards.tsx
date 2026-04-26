@@ -40,7 +40,10 @@ export default function InvCards({ data, onEditRefresh }: InvCardsProps) {
         columnWrapperStyle={{ justifyContent: "space-between" }}
         ListFooterComponent={
           <View style={styles.footerRow}>
-            <Text style={styles.selectedDetailText}>Showing 8 of 16 items</Text>
+            <Text style={styles.shownDataDetailText}>
+              Showing <Text style={styles.shownHL}>{paginatedData.length}</Text>{" "}
+              of <Text style={styles.shownHL}>{data.length}</Text> items
+            </Text>
             <View
               style={{
                 flexDirection: "row",
@@ -123,8 +126,12 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     paddingHorizontal: 20,
   },
-  selectedDetailText: {
+  shownDataDetailText: {
+    ...VarTypo.body.b3,
     color: VarColors.neutral.c600,
+  },
+  shownHL: {
+    ...VarTypo.body.b3_m,
   },
   pageBtn: {
     justifyContent: "center",
