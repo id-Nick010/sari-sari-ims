@@ -190,16 +190,36 @@ export default function InvTable({
             </View>
           }
           ListFooterComponent={
-            <DataTable.Pagination
-              page={page}
-              numberOfPages={Math.ceil(data.length / numberOfItemsPerPage)}
-              onPageChange={(page) => setPage(page)}
-              label={`${from + 1}-${to} of ${data.length}`}
-              numberOfItemsPerPageList={numberOfItemsPerPageList}
-              numberOfItemsPerPage={numberOfItemsPerPage}
-              onItemsPerPageChange={onItemsPerPageChange}
-              selectPageDropdownLabel={"Rows/page:"}
-            />
+            <View
+              style={{
+                justifyContent: "space-between",
+                alignItems: "center",
+                paddingHorizontal: 15,
+                flexDirection: "row",
+              }}
+            >
+              <Text
+                style={{
+                  flex: 3,
+                  color: VarColors.neutral.c600,
+                  ...VarTypo.body.b3,
+                }}
+              >
+                Showing <Text style={styles.textHL}>{pageData.length}</Text> of{" "}
+                <Text style={styles.textHL}>{data.length}</Text> items
+              </Text>
+              <DataTable.Pagination
+                style={{ flex: 2 }}
+                page={page}
+                numberOfPages={Math.ceil(data.length / numberOfItemsPerPage)}
+                onPageChange={(page) => setPage(page)}
+                label={`${from + 1}-${to} of ${data.length}`}
+                numberOfItemsPerPageList={numberOfItemsPerPageList}
+                numberOfItemsPerPage={numberOfItemsPerPage}
+                onItemsPerPageChange={onItemsPerPageChange}
+                selectPageDropdownLabel={"Rows:"}
+              />
+            </View>
           }
           stickyHeaderIndices={[0]}
           style={styles.list}
@@ -254,5 +274,8 @@ const styles = StyleSheet.create({
     borderRadius: VarContainers.radius.s2,
     borderWidth: VarContainers.stroke.s1,
     borderColor: VarColors.neutral.c200,
+  },
+  textHL: {
+    ...VarTypo.body.b3_m,
   },
 });
