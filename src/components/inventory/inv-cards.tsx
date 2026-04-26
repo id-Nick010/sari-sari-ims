@@ -21,6 +21,8 @@ export default function InvCards({ data, onEditRefresh }: InvCardsProps) {
     page * itemsPerPage,
   );
 
+  const maxPage = Math.ceil(data.length / itemsPerPage);
+
   useEffect(() => console.log("curr page: " + page), [page]);
 
   return (
@@ -48,7 +50,7 @@ export default function InvCards({ data, onEditRefresh }: InvCardsProps) {
               <Pressable
                 style={[styles.pageBtn, styles.inactivePageBtn]}
                 onPress={() => {
-                  setPage((prev) => prev - 1);
+                  setPage((prev) => (prev === 1 ? prev : prev - 1));
                 }}
               >
                 <Ionicons
@@ -57,7 +59,7 @@ export default function InvCards({ data, onEditRefresh }: InvCardsProps) {
                   size={18}
                 />
               </Pressable>
-              {[...Array(Math.ceil(data.length / itemsPerPage))].map((_, i) => (
+              {[...Array(maxPage)].map((_, i) => (
                 <Pressable
                   style={[
                     styles.pageBtn,
@@ -83,7 +85,7 @@ export default function InvCards({ data, onEditRefresh }: InvCardsProps) {
               <Pressable
                 style={[styles.pageBtn, styles.inactivePageBtn]}
                 onPress={() => {
-                  setPage((prev) => prev + 1);
+                  setPage((prev) => (prev === maxPage ? prev : prev + 1));
                 }}
               >
                 <Ionicons
