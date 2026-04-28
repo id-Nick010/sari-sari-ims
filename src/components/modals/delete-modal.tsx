@@ -49,20 +49,31 @@ export default function DeleteModal({
         <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
         <View style={styles.modalBox}>
           <Ionicons style={styles.deleteIcon} name="trash-outline" size={30} />
-          <Text
-            style={styles.headerText}
-            onPress={() => console.log("add pop up here!")}
-          >
-            Delete {displayItems}?
-          </Text>
-          <Text style={styles.subText}>
-            Are you sure you want to delete{" "}
-            <Text style={styles.subTextHigh}>
-              {productIds.length} selected item
-              {productIds.length > 1 ? "s" : ""}?
-            </Text>{" "}
-            This action cannot be undone.
-          </Text>
+          {productIds.length !== 0 ? (
+            <>
+              <Text
+                style={styles.headerText}
+                onPress={() => console.log("add pop up here!")}
+              >
+                Delete {displayItems}?
+              </Text>
+              <Text style={styles.subText}>
+                Are you sure you want to delete{" "}
+                <Text style={styles.subTextHigh}>
+                  {productIds.length} selected item
+                  {productIds.length > 1 ? "s" : ""}?
+                </Text>{" "}
+                This action cannot be undone.
+              </Text>
+            </>
+          ) : (
+            <>
+              <Text style={styles.headerText}>Nothing to delete.</Text>
+              <Text style={[styles.subText, styles.subTextHigh]}>
+                You selected {productIds.length} items
+              </Text>
+            </>
+          )}
           <View style={styles.actionBtnFrame}>
             <Pressable
               onPress={onClose}
@@ -71,8 +82,12 @@ export default function DeleteModal({
               <Text style={styles.cancelBtnText}>Cancel</Text>
             </Pressable>
             <Pressable
-              onPress={deleteToDB}
-              style={[styles.deleteBtn, styles.actionBtn]}
+              onPress={productIds.length !== 0 ? deleteToDB : () => {}}
+              style={[
+                styles.deleteBtn,
+                styles.actionBtn,
+                productIds.length === 0 ? styles.btnDisabled : "",
+              ]}
             >
               <Text style={styles.deleteBtnText}>Delete</Text>
             </Pressable>
@@ -143,5 +158,8 @@ const styles = StyleSheet.create({
   deleteBtnText: {
     color: VarColors.neutral.c100,
     ...VarTypo.body.b4_sb,
+  },
+  btnDisabled: {
+    backgroundColor: VarColors.neutral.c400,
   },
 });
