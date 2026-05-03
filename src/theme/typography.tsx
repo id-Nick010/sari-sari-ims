@@ -106,6 +106,16 @@ const VarTypo: Typography = {
       fontSize: 12,
       lineHeight: 19.5,
     },
+    b5: {
+      fontFamily: "Inter_600Regular",
+      fontSize: 10,
+      lineHeight: 15,
+    },
+    b5_sb: {
+      fontFamily: "Inter_600SemiBold",
+      fontSize: 10,
+      lineHeight: 15,
+    },
   },
 };
 
