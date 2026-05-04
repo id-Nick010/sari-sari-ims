@@ -12,7 +12,7 @@ import VarContainers from "@/src/theme/containers";
 import VarTypo from "@/src/theme/typography";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const colorStyle = VarColors;
@@ -43,124 +43,128 @@ export default function InventoryScreen() {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <View style={{ flex: 1, marginInline: contStyle.spacing.s7 }}>
-        <GreetingBar />
-      </View>
-      <View style={{ flex: 2, marginInline: contStyle.spacing.s7 }}>
-        <StatCards />
-      </View>
-      <View style={styles.tableSection}>
-        {/* inventorytable  */}
-        <View
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            margin: contStyle.spacing.s4,
-            gap: 10,
-          }}
-        >
-          {/* Search & View Toggle */}
+      <ScrollView stickyHeaderIndices={[2]}>
+        <View style={{ flex: 1, marginInline: contStyle.spacing.s7 }}>
+          <GreetingBar />
+        </View>
+        <View style={{ flex: 2, marginInline: contStyle.spacing.s7 }}>
+          <StatCards />
+        </View>
+        <View style={styles.tableAction}>
+          {/* inventorytable  */}
           <View
             style={{
-              flex: 6,
+              flex: 1,
               flexDirection: "row",
+              justifyContent: "space-between",
+              margin: contStyle.spacing.s4,
               gap: 10,
             }}
           >
-            <View style={{ flex: 7, justifyContent: "center" }}>
-              <SearchBar />
-            </View>
-            <View style={{ flex: 3, justifyContent: "center" }}>
-              <ViewToggle
-                labelA="Table"
-                labelB="Cards"
-                currValue={view}
-                setValue={setView}
-              />
-            </View>
-          </View>
-          {/* Table Action Buttons */}
-          <View
-            style={{
-              flex: 4,
-              flexDirection: "row",
-              justifyContent: "flex-end",
-              alignItems: "center",
-              gap: 10,
-            }}
-          >
-            <Pressable
-              onPress={() => setAddModalOpen(true)}
-              style={({ pressed }) => [
-                styles.addItemBtn,
-                {
-                  backgroundColor: pressed
-                    ? "lightgrey"
-                    : colorStyle.primary.c300,
-                },
-              ]}
-            >
-              <Ionicons
-                style={styles.addItemBtnIcon}
-                name="add-outline"
-                size={20}
-              />
-              <Text style={styles.addItemBtnText}>Add Item</Text>
-            </Pressable>
-            <Pressable
-              onPress={() => {
-                setDeleteModalOpen(true);
+            {/* Search & View Toggle */}
+            <View
+              style={{
+                flex: 6,
+                flexDirection: "row",
+                gap: 10,
               }}
-              style={({ pressed }) => [
-                styles.delItemBtn,
-                {
-                  backgroundColor: pressed
-                    ? "lightgrey"
-                    : colorStyle.neutral.c100,
-                },
-              ]}
             >
-              <Ionicons
-                style={styles.delItemBtnIcon}
-                name="trash-outline"
-                size={20}
+              <View style={{ flex: 7, justifyContent: "center" }}>
+                <SearchBar />
+              </View>
+              <View style={{ flex: 3, justifyContent: "center" }}>
+                <ViewToggle
+                  labelA="Table"
+                  labelB="Cards"
+                  currValue={view}
+                  setValue={setView}
+                />
+              </View>
+            </View>
+            {/* Table Action Buttons */}
+            <View
+              style={{
+                flex: 4,
+                flexDirection: "row",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                gap: 10,
+              }}
+            >
+              <Pressable
+                onPress={() => setAddModalOpen(true)}
+                style={({ pressed }) => [
+                  styles.addItemBtn,
+                  {
+                    backgroundColor: pressed
+                      ? "lightgrey"
+                      : colorStyle.primary.c300,
+                  },
+                ]}
+              >
+                <Ionicons
+                  style={styles.addItemBtnIcon}
+                  name="add-outline"
+                  size={20}
+                />
+                <Text style={styles.addItemBtnText}>Add Item</Text>
+              </Pressable>
+              <Pressable
+                onPress={() => {
+                  setDeleteModalOpen(true);
+                }}
+                style={({ pressed }) => [
+                  styles.delItemBtn,
+                  {
+                    backgroundColor: pressed
+                      ? "lightgrey"
+                      : colorStyle.neutral.c100,
+                  },
+                ]}
+              >
+                <Ionicons
+                  style={styles.delItemBtnIcon}
+                  name="trash-outline"
+                  size={20}
+                />
+                <Text style={styles.delItemBtnText}>Delete</Text>
+              </Pressable>
+            </View>
+          </View>
+          {/* <View style={{ flex: 1 }}></View> */}
+          {/* main inventory tbl */}
+        </View>
+        <View style={styles.tableSection}>
+          <View style={styles.mainView}>
+            {view === 1 ? (
+              <InvTable
+                data={products}
+                onEditRefresh={loadAllProductData}
+                checkedIds={checkedIds}
+                setCheckedIds={setCheckedIds}
               />
-              <Text style={styles.delItemBtnText}>Delete</Text>
-            </Pressable>
+            ) : (
+              <InvCards data={products} onEditRefresh={loadAllProductData} />
+            )}
           </View>
         </View>
-        {/* <View style={{ flex: 1 }}></View> */}
-        {/* main inventory tbl */}
-        <View style={styles.mainView}>
-          {view === 1 ? (
-            <InvTable
-              data={products}
-              onEditRefresh={loadAllProductData}
-              checkedIds={checkedIds}
-              setCheckedIds={setCheckedIds}
-            />
-          ) : (
-            <InvCards data={products} onEditRefresh={loadAllProductData} />
-          )}
-        </View>
-      </View>
-      <AddModal
-        visible={addModalOpen}
-        onClose={() => {
-          setAddModalOpen(false);
-        }}
-        onAdd={loadAllProductData}
-      />
-      <DeleteModal
-        visible={deleteModalOpen}
-        data={products}
-        productIds={checkedIds}
-        onClose={() => {
-          setDeleteModalOpen(false);
-        }}
-        onDelete={productDeleted}
-      />
+        <AddModal
+          visible={addModalOpen}
+          onClose={() => {
+            setAddModalOpen(false);
+          }}
+          onAdd={loadAllProductData}
+        />
+        <DeleteModal
+          visible={deleteModalOpen}
+          data={products}
+          productIds={checkedIds}
+          onClose={() => {
+            setDeleteModalOpen(false);
+          }}
+          onDelete={productDeleted}
+        />
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -172,7 +176,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: colorStyle.yellow.c10,
   },
-  tableSection: {
+  tableAction: {
     flex: 9,
     width: "95%",
     marginInline: contStyle.spacing.s7,
@@ -180,6 +184,21 @@ const styles = StyleSheet.create({
     borderWidth: contStyle.stroke.s0,
     borderColor: colorStyle.neutral.c200,
     borderRadius: contStyle.radius.s6,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+  },
+
+  tableSection: {
+    flex: 9,
+    width: "95%",
+    marginInline: contStyle.spacing.s7,
+    backgroundColor: colorStyle.neutral.c100,
+    borderWidth: contStyle.stroke.s0,
+    borderTopWidth: 0,
+    borderColor: colorStyle.neutral.c200,
+    borderRadius: contStyle.radius.s6,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
   },
   // action buttons
   addItemBtn: {

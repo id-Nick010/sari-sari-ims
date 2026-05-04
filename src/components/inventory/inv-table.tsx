@@ -147,6 +147,7 @@ export default function InvTable({
           data={pageData}
           keyExtractor={(item) => item.id.toString()}
           renderItem={renderItem}
+          scrollEnabled={false}
           ListHeaderComponent={
             <View style={{ backgroundColor: "#fff", elevation: 4, zIndex: 10 }}>
               <DataTable.Header style={styles.row}>

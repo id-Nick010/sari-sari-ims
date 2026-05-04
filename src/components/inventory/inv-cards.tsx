@@ -31,6 +31,7 @@ export default function InvCards({ data, onEditRefresh }: InvCardsProps) {
         data={paginatedData}
         keyExtractor={(item, index) => index.toString()}
         numColumns={3}
+        scrollEnabled={false}
         renderItem={({ item }) => (
           <View style={styles.card}>
             <ProductCard data={item} onEditRefresh={onEditRefresh} />
