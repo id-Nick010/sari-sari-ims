@@ -3,16 +3,23 @@ import VarColors from "@/src/theme/colors";
 import VarContainers from "@/src/theme/containers";
 import VarTypo from "@/src/theme/typography";
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import ProductCard from "./product-card";
 
 interface InvCardsProps {
   data: Product[];
   onEditRefresh: () => void;
+  checkedIds: number[];
+  setCheckedIds: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-export default function InvCards({ data, onEditRefresh }: InvCardsProps) {
+export default function InvCards({
+  data,
+  onEditRefresh,
+  checkedIds,
+  setCheckedIds,
+}: InvCardsProps) {
   const itemsPerPage = 10;
   const [page, setPage] = useState(1);
 
@@ -23,7 +30,20 @@ export default function InvCards({ data, onEditRefresh }: InvCardsProps) {
 
   const maxPage = Math.ceil(data.length / itemsPerPage);
 
-  useEffect(() => console.log("curr page: " + page), [page]);
+  useEffect(() => console.log("curr page: " + checkedIds), [checkedIds]);
+
+  const toggleSelection = useCallback(
+    (id: number, newValue: boolean) => {
+      setCheckedIds((curr) => {
+        if (newValue) {
+          return curr.includes(id) ? curr : [...curr, id];
+        } else {
+          return curr.filter((x) => x !== id);
+        }
+      });
+    },
+    [setCheckedIds],
+  );
 
   return (
     <View>
@@ -34,7 +54,12 @@ export default function InvCards({ data, onEditRefresh }: InvCardsProps) {
         scrollEnabled={false}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            <ProductCard data={item} onEditRefresh={onEditRefresh} />
+            <ProductCard
+              data={item}
+              onEditRefresh={onEditRefresh}
+              checkedIds={checkedIds}
+              setCheckedIds={setCheckedIds}
+            />
           </View>
         )}
         contentContainerStyle={styles.container}
