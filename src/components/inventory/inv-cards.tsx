@@ -3,7 +3,7 @@ import VarColors from "@/src/theme/colors";
 import VarContainers from "@/src/theme/containers";
 import VarTypo from "@/src/theme/typography";
 import { Ionicons } from "@expo/vector-icons";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import ProductCard from "./product-card";
 
@@ -31,19 +31,6 @@ export default function InvCards({
   const maxPage = Math.ceil(data.length / itemsPerPage);
 
   useEffect(() => console.log("curr page: " + checkedIds), [checkedIds]);
-
-  const toggleSelection = useCallback(
-    (id: number, newValue: boolean) => {
-      setCheckedIds((curr) => {
-        if (newValue) {
-          return curr.includes(id) ? curr : [...curr, id];
-        } else {
-          return curr.filter((x) => x !== id);
-        }
-      });
-    },
-    [setCheckedIds],
-  );
 
   return (
     <View>
