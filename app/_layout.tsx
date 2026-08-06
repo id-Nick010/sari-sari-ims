@@ -10,9 +10,7 @@ import {
   useFonts,
 } from "@expo-google-fonts/inter";
 import { Ionicons } from "@expo/vector-icons";
-import { DrawerContentComponentProps } from "@react-navigation/drawer";
-import { useNavigationState } from "@react-navigation/native";
-import { Drawer } from "expo-router/drawer";
+import { Drawer, DrawerContentComponentProps } from "expo-router/drawer";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -54,7 +52,7 @@ export default function RootLayout() {
       <PaperProvider theme={theme}>
         <StatusBar hidden={true} />
         <Drawer
-          drawerContent={(props) => <CustomSideber {...props} />}
+          drawerContent={(props) => <CustomSidebar {...props} />}
           screenOptions={{
             drawerType: "permanent",
             headerShown: false,
@@ -87,87 +85,87 @@ export default function RootLayout() {
 
 type IoniconName = React.ComponentProps<typeof Ionicons>["name"];
 
-function CustomSideber({ navigation }: DrawerContentComponentProps) {
-  const currentRouteName = useNavigationState((state) => {
-    const route = state.routes[state.index];
+type DrawerItem = {
+  name: string;
+  label: string;
+  icon: IoniconName;
+};
 
-    // Drawer routes may contain nested state for the active child
-    if (route.state) {
-      const nested = route.state;
-      return nested.routes[nested.index ?? 0].name;
-    }
+const DRAWER_ITEMS: DrawerItem[] = [
+  { name: "dashboard", label: "Dashboard", icon: "easel-outline" },
+  { name: "scan", label: "Scan", icon: "scan-sharp" },
+  { name: "inventory", label: "Inventory", icon: "albums-outline" },
+  { name: "transactions", label: "Transactions", icon: "receipt-outline" },
+  { name: "utang", label: "Utang", icon: "wallet-outline" },
+];
 
-    return route.name;
-  });
+function CustomSidebar({ navigation, state }: DrawerContentComponentProps) {
+  const currentRouteName = state.routes[state.index].name;
 
   useEffect(() => {
-    console.log("Drawer active route: " + currentRouteName);
+    if (__DEV__) {
+      console.log("Drawer active route: " + currentRouteName);
+    }
   }, [currentRouteName]);
 
-  const screenNames = [
-    "dashboard",
-    "scan",
-    "inventory",
-    "transactions",
-    "utang",
-  ];
-
-  const iconNames: IoniconName[] = [
-    "easel-outline",
-    "scan-sharp",
-    "albums-outline",
-    "receipt-outline",
-    "wallet-outline",
-  ];
-
-  const capFirst = (s: string) => (s ? s[0].toUpperCase() + s.slice(1) : s);
-
-  const navComponent = (navName: string, iconName: string, key: number) => (
-    <TouchableOpacity
-      key={key}
-      onPress={() => navigation.navigate(navName)}
-      style={[
-        styles.navContent,
-        navName === currentRouteName
-          ? [styles.drawerHL, styles.dropdown]
-          : styles.drawerNM,
-      ]}
-    >
-      <Ionicons
-        name={iconNames[key]}
-        size={30}
-        color={
-          navName === currentRouteName
-            ? VarColors.neutral.c100
-            : VarColors.neutral.c700
-        }
-      />
-      <Text
+  const renderNavItem = ({ name, label, icon }: DrawerItem) => {
+    const isActive = name === currentRouteName;
+    return (
+      <TouchableOpacity
+        key={name}
+        accessibilityRole="button"
+        accessibilityLabel={label}
+        onPress={() => navigation.navigate(name)}
         style={[
-          styles.navText,
-          navName === currentRouteName ? styles.textHL : styles.textNM,
+          styles.navContent,
+          isActive ? [styles.drawerHL, styles.dropdown] : styles.drawerNM,
         ]}
       >
-        {capFirst(navName)}
-      </Text>
-    </TouchableOpacity>
-  );
+        <Ionicons
+          name={icon}
+          size={30}
+          color={isActive ? VarColors.neutral.c100 : VarColors.neutral.c700}
+        />
+        <Text
+          style={[styles.navText, isActive ? styles.textHL : styles.textNM]}
+        >
+          {label}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={styles.navView}>
       <View style={styles.topNav}>
-        <TouchableOpacity onPress={() => {}} style={styles.navContent}>
-          <Ionicons name="people-circle" size={35} color="grey" />
+        <TouchableOpacity
+          accessibilityRole="button"
+          accessibilityLabel="Profile"
+          onPress={() => {
+            // TODO: navigate to profile
+          }}
+          style={styles.navContent}
+        >
+          <Ionicons
+            name="people-circle"
+            size={35}
+            color={VarColors.neutral.c500}
+          />
           <Text style={styles.navText}>Dapuni</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.screenNav}>
-        {screenNames.map((screen, index) =>
-          navComponent(screen, iconNames[index], index),
-        )}
-      </View>
+
+      <View style={styles.screenNav}>{DRAWER_ITEMS.map(renderNavItem)}</View>
+
       <View style={styles.bottomNav}>
-        <TouchableOpacity onPress={() => {}} style={styles.navContent}>
+        <TouchableOpacity
+          accessibilityRole="button"
+          accessibilityLabel="Logout"
+          onPress={() => {
+            // TODO: implement logout
+          }}
+          style={styles.navContent}
+        >
           <Ionicons
             name="log-out-outline"
             size={30}
