@@ -1,3 +1,5 @@
+import 'react-native-gesture-handler';
+import 'react-native-reanimated';
 import { initDB } from "@/src/db/sqlite";
 import VarColors from "@/src/theme/colors";
 import VarContainers from "@/src/theme/containers";
@@ -66,7 +68,7 @@ export default function RootLayout() {
         >
           {/* Don't Use this */}
           <Drawer.Screen
-            name="dashboard"
+            name="index"
             options={{ drawerLabel: "Dashboard" }}
           />
           <Drawer.Screen name="scan" options={{ drawerLabel: "Scan" }} />
