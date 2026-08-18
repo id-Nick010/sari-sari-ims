@@ -10,9 +10,16 @@ import ProductCard from "./product-card";
 interface InvCardsProps {
   data: Product[];
   onEditRefresh: () => void;
+  checkedIds: number[];
+  setCheckedIds: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-export default function InvCards({ data, onEditRefresh }: InvCardsProps) {
+export default function InvCards({
+  data,
+  onEditRefresh,
+  checkedIds,
+  setCheckedIds,
+}: InvCardsProps) {
   const itemsPerPage = 10;
   const [page, setPage] = useState(1);
 
@@ -23,7 +30,7 @@ export default function InvCards({ data, onEditRefresh }: InvCardsProps) {
 
   const maxPage = Math.ceil(data.length / itemsPerPage);
 
-  useEffect(() => console.log("curr page: " + page), [page]);
+  useEffect(() => console.log("curr page: " + checkedIds), [checkedIds]);
 
   return (
     <View>
@@ -31,9 +38,15 @@ export default function InvCards({ data, onEditRefresh }: InvCardsProps) {
         data={paginatedData}
         keyExtractor={(item, index) => index.toString()}
         numColumns={3}
+        scrollEnabled={false}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            <ProductCard data={item} onEditRefresh={onEditRefresh} />
+            <ProductCard
+              data={item}
+              onEditRefresh={onEditRefresh}
+              checkedIds={checkedIds}
+              setCheckedIds={setCheckedIds}
+            />
           </View>
         )}
         contentContainerStyle={styles.container}

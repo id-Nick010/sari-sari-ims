@@ -3,22 +3,51 @@ import VarColors from "@/src/theme/colors";
 import VarContainers from "@/src/theme/containers";
 import VarTypo from "@/src/theme/typography";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import CheckBox from "../check-box";
 import EditModal from "../modals/edit-modal";
 
 interface ProductCardProps {
   data: Product;
+  checkedIds: number[];
   onEditRefresh: () => void;
+  setCheckedIds: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-export default function ProductCard({ data, onEditRefresh }: ProductCardProps) {
+export default function ProductCard({
+  data,
+  onEditRefresh,
+  checkedIds,
+  setCheckedIds,
+}: ProductCardProps) {
   const [editModalOpen, setEditModalOpen] = useState({
     isVisible: false,
     dataId: -1,
   });
+
+  const toggleSelection = useCallback(
+    (id: number, newValue: boolean) => {
+      setCheckedIds((curr) => {
+        if (newValue) {
+          return curr.includes(id) ? curr : [...curr, id];
+        } else {
+          return curr.filter((x) => x !== id);
+        }
+      });
+    },
+    [setCheckedIds],
+  );
   return (
     <View style={styles.container}>
+      <View style={styles.checkBoxFrame}>
+        <CheckBox
+          checked={checkedIds.includes(data.id)}
+          onChange={(newValue) => {
+            toggleSelection(data.id, newValue);
+          }}
+        />
+      </View>
       <View style={styles.imgFrame}></View>
       <Text style={styles.prodName}>{data.name}</Text>
       <View style={{ flexDirection: "row", justifyContent: "center", gap: 5 }}>
@@ -92,6 +121,12 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "space-between",
     gap: 5,
+  },
+  checkBoxFrame: {
+    position: "absolute",
+    top: 15,
+    left: 15,
+    right: 0,
   },
   imgFrame: {
     flex: 5,
