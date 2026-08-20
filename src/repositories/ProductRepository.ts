@@ -7,6 +7,14 @@ export const ProductRepository = {
     return await db.getAllAsync<Product>("SELECT * FROM products");
   },
 
+  async searchByName(text: string): Promise<Product[]> {
+    const db = await openDB();
+    return await db.getAllAsync<Product>(
+      "SELECT * FROM products WHERE LOWER(name) LIKE LOWER(?)",
+      [`%${text}%`]
+    );
+  },
+
   async getDataById(id: number): Promise<Product | null> {
     const db = await openDB();
     return await db.getFirstAsync<Product>(

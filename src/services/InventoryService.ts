@@ -68,6 +68,10 @@ export const InventoryService = {
     return await ProductRepository.getAll();
   },
 
+  async searchProductByName(text: string): Promise<Product[]> {
+    return await ProductRepository.searchByName(text);
+  },
+
   async getProductById(id: number): Promise<Product | null> {
     return await ProductRepository.getDataById(id);
   },
