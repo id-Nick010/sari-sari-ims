@@ -48,10 +48,12 @@ const styles = StyleSheet.create({
   },
   searchIcon: {
     color: colorStyle.neutral.c600,
+    width: "6%",
   },
   searchBar: {
     ...typoStyle.body.b3,
     color: colorStyle.neutral.c600,
     height: "100%",
+    width: "94%",
   },
 });
