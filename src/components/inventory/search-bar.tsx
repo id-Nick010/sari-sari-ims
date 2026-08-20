@@ -2,6 +2,7 @@ import VarColors from "@/src/theme/colors";
 import VarContainers from "@/src/theme/containers";
 import VarTypo from "@/src/theme/typography";
 import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 
@@ -9,11 +10,28 @@ const colorStyle = VarColors;
 const typoStyle = VarTypo;
 const contStyle = VarContainers;
 
-export default function SearchBar() {
+type SearchBarProps = {
+  onSearch: (text: string) => void;
+};
+
+export default function SearchBar({ onSearch }: SearchBarProps) {
+  const [text, setText] = useState("");
+
+  const handleSearch = (value: string) => {
+    onSearch(value);
+    setText(value);
+    console.log("text: " + text + ", value: " + value);
+  };
+
   return (
     <View style={styles.container}>
       <Ionicons style={styles.searchIcon} name="search-outline" size={25} />
-      <TextInput style={styles.searchBar} placeholder="Search Items..." />
+      <TextInput
+        style={styles.searchBar}
+        value={text}
+        onChangeText={handleSearch}
+        placeholder="Search Items..."
+      />
     </View>
   );
 }

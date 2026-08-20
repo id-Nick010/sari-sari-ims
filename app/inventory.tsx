@@ -20,7 +20,8 @@ const contStyle = VarContainers;
 const typoStyle = VarTypo;
 
 export default function InventoryScreen() {
-  const { products, loadAllProductData } = useInventoryController();
+  const { products, loadAllProductData, searchProductByName } =
+    useInventoryController();
   // load products for the inventory table
 
   useEffect(() => {
@@ -70,7 +71,7 @@ export default function InventoryScreen() {
               }}
             >
               <View style={{ flex: 7, justifyContent: "center" }}>
-                <SearchBar />
+                <SearchBar onSearch={searchProductByName} />
               </View>
               <View style={{ flex: 3, justifyContent: "center" }}>
                 <ViewToggle

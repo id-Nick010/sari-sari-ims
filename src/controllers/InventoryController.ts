@@ -13,6 +13,13 @@ export const useInventoryController = () => {
     setLoading(false);
   }, []);
 
+  const searchProductByName = useCallback(async (text: string) => {
+    setLoading(true);
+    const result = await InventoryService.searchProductByName(text);
+    setProducts(result);
+    setLoading(false);
+  },[])
+
   const getProductById = useCallback(
     async (id: number): Promise<Product | null> => {
       return InventoryService.getProductById(id);
@@ -82,6 +89,7 @@ export const useInventoryController = () => {
     products,
     loading,
     loadAllProductData,
+    searchProductByName,
     getProductById,
     createProduct,
     editProduct,
